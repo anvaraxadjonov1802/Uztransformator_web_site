@@ -94,12 +94,17 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
               className="group relative mx-auto block w-full max-w-[410px] cursor-zoom-in bg-transparent p-0 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF] focus-visible:ring-offset-4 focus-visible:ring-offset-[#020308]"
               aria-label={`${cert.title[currentLang]} — ${t.previewBtn}`}
             >
-              <img
-                src={cert.image}
-                alt={cert.title[currentLang]}
-                loading="lazy"
-                className="mx-auto h-auto max-h-[520px] w-full object-contain shadow-[0_22px_55px_rgba(0,0,0,0.58)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.025] group-hover:shadow-[0_26px_70px_rgba(0,0,0,0.68),0_0_28px_rgba(15,91,255,0.16)]"
-              />
+              <div className="relative rounded-[24px] bg-[linear-gradient(135deg,rgba(0,240,255,0.78),rgba(15,91,255,0.58)_48%,rgba(122,73,255,0.72))] p-[2px] shadow-[0_22px_55px_rgba(0,0,0,0.58),0_0_24px_rgba(15,91,255,0.12)] transition-all duration-500 group-hover:-translate-y-1.5 group-hover:scale-[1.018] group-hover:shadow-[0_28px_72px_rgba(0,0,0,0.72),0_0_34px_rgba(0,240,255,0.22)]">
+                <div className="relative overflow-hidden rounded-[22px] border border-white/10 bg-black p-2.5 sm:p-3">
+                  <div className="pointer-events-none absolute inset-0 rounded-[22px] bg-[radial-gradient(circle_at_50%_0%,rgba(0,240,255,0.08),transparent_42%)]" />
+                  <img
+                    src={cert.image}
+                    alt={cert.title[currentLang]}
+                    loading="lazy"
+                    className="relative mx-auto h-auto max-h-[520px] w-full rounded-[14px] object-contain"
+                  />
+                </div>
+              </div>
             </motion.button>
           ))}
         </div>

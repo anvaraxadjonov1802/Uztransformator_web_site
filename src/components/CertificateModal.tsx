@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import { X } from 'lucide-react';
 import { Certificate, Language } from '../types';
@@ -32,11 +33,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
   if (!certificate) return null;
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/92 p-3 backdrop-blur-md sm:p-6"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/94 p-3 backdrop-blur-md sm:p-6"
       onClick={onClose}
     >
       <motion.div
@@ -64,6 +65,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           <X className="h-5 w-5" />
         </button>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body,
   );
 };

@@ -58,9 +58,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="fixed top-4 left-0 right-0 z-50 flex justify-center px-3 sm:px-5 pointer-events-none">
+    <header className="fixed left-0 right-0 top-4 z-40 flex justify-center px-2.5 pointer-events-none sm:px-5">
       <div
-        className={`pointer-events-auto relative flex w-full max-w-[1080px] items-center justify-between rounded-full border px-3 py-2 transition-all duration-300 sm:px-5 ${
+        className={`pointer-events-auto relative flex w-full max-w-[1080px] items-center justify-between rounded-full border px-2.5 py-2 transition-all duration-300 sm:px-5 ${
           isScrolled
             ? 'bg-[#030409]/96 border-white/10 backdrop-blur-xl shadow-[0_16px_45px_rgba(0,0,0,0.58)]'
             : 'bg-[#030409]/82 border-white/8 backdrop-blur-md shadow-[0_14px_34px_rgba(0,0,0,0.38)]'
@@ -69,20 +69,20 @@ export const Navbar: React.FC<NavbarProps> = ({
         <a
           href="#hero"
           onClick={(e) => scrollToSection(e, '#hero')}
-          className="group flex min-w-0 items-center gap-2.5 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5BFF]"
+          className="group flex min-w-0 flex-1 items-center gap-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0F5BFF] sm:flex-none sm:gap-2.5"
           aria-label="UZTRANSFORMATOR bosh sahifa"
         >
           <img
             src="/assets/uztransformator-logo.png"
             alt="UZTRANSFORMATOR logotipi"
-            className="h-9 w-9 shrink-0 object-contain drop-shadow-[0_0_10px_rgba(15,91,255,0.34)] transition-transform duration-300 group-hover:scale-105"
+            className="h-8 w-8 shrink-0 object-contain drop-shadow-[0_0_10px_rgba(15,91,255,0.34)] transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9"
           />
 
-          <div className="hidden min-w-0 flex-col sm:flex">
-            <span className="truncate font-display text-[13px] font-bold leading-none tracking-[0.08em] text-white transition-colors group-hover:text-[#69A0FF]">
+          <div className="flex min-w-0 max-w-[126px] flex-col sm:max-w-none">
+            <span className="truncate font-display text-[10px] font-bold leading-none tracking-[0.035em] text-white transition-colors group-hover:text-[#69A0FF] min-[390px]:text-[11px] sm:text-[13px] sm:tracking-[0.08em]">
               UZTRANSFORMATOR
             </span>
-            <span className="mt-1 text-[7px] font-medium uppercase leading-none tracking-[0.28em] text-slate-500">
+            <span className="mt-1 hidden text-[7px] font-medium uppercase leading-none tracking-[0.24em] text-slate-500 min-[390px]:block sm:tracking-[0.28em]">
               Built for power
             </span>
           </div>
@@ -111,7 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="ml-2 flex shrink-0 items-center gap-1.5 sm:gap-2">
           <LanguageSelector
             currentLang={currentLang}
             onLanguageChange={onLanguageChange}
