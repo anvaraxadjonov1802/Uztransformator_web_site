@@ -1,18 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 
 interface HeroAnimationPlaceholderProps {
-  videoSrc?: string;
+  videoMp4Src?: string;
+  videoWebmSrc?: string;
+  posterSrc?: string;
   className?: string;
 }
 
 export const HeroAnimationPlaceholder: React.FC<HeroAnimationPlaceholderProps> = ({
-  videoSrc,
+  videoMp4Src,
+  videoWebmSrc,
+  posterSrc,
   className = '',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const hasVideo = Boolean(videoMp4Src || videoWebmSrc);
 
   useEffect(() => {
-    if (videoSrc) return; // If video exists, don't run canvas animation
+    if (hasVideo) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -20,107 +25,41 @@ export const HeroAnimationPlaceholder: React.FC<HeroAnimationPlaceholderProps> =
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
     let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
 
     const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return;
+      if (!canvas.parentElement) return;
       width = canvas.width = canvas.parentElement.clientWidth;
       height = canvas.height = canvas.parentElement.clientHeight;
     };
 
     window.addEventListener('resize', handleResize);
 
-    // Particle nodes representing high-voltage grid network
-    const nodeCount = Math.min(45, Math.floor(width / 35));
+    const nodeCount = Math.min(36, Math.floor(width / 42));
     const nodes = Array.from({ length: nodeCount }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 2 + 1,
-      pulse: Math.random() * Math.PI * 2,
+      vx: (Math.random() - 0.5) * 0.28,
+      vy: (Math.random() - 0.5) * 0.28,
+      radius: Math.random() * 1.5 + 0.7,
     }));
 
-    let time = 0;
-
     const render = () => {
-      time += 0.015;
       ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < nodes.length; i += 1) {
+        const node = nodes[i];
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > width) node.vx *= -1;
+        if (node.y < 0 || node.y > height) node.vy *= -1;
 
-      // Draw subtle grid lines
-      const gridSize = 80;
-      ctx.strokeStyle = 'rgba(15, 91, 255, 0.04)';
-      ctx.lineWidth = 1;
-
-      for (let x = 0; x < width; x += gridSize) {
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-
-      for (let y = 0; y < height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      // Draw particle electrical connections
-      for (let i = 0; i < nodes.length; i++) {
-        const nodeA = nodes[i];
-
-        // Move nodes
-        nodeA.x += nodeA.vx;
-        nodeA.y += nodeA.vy;
-
-        if (nodeA.x < 0 || nodeA.x > width) nodeA.vx *= -1;
-        if (nodeA.y < 0 || nodeA.y > height) nodeA.vy *= -1;
-
-        nodeA.pulse += 0.03;
-
-        // Draw connections
-        for (let j = i + 1; j < nodes.length; j++) {
-          const nodeB = nodes[j];
-          const dx = nodeA.x - nodeB.x;
-          const dy = nodeA.y - nodeB.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 180) {
-            const alpha = (1 - dist / 180) * 0.25;
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
-            ctx.lineWidth = dist < 80 ? 1.2 : 0.6;
-            ctx.moveTo(nodeA.x, nodeA.y);
-            ctx.lineTo(nodeB.x, nodeB.y);
-            ctx.stroke();
-          }
-        }
-
-        // Draw node
-        const nodeGlow = Math.sin(nodeA.pulse) * 1.5 + nodeA.radius;
-        ctx.beginPath();
-        ctx.arc(nodeA.x, nodeA.y, Math.max(0.5, nodeGlow), 0, Math.PI * 2);
-        ctx.fillStyle = nodeA.radius > 2 ? 'rgba(0, 240, 255, 0.8)' : 'rgba(15, 91, 255, 0.7)';
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = '#00F0FF';
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(15,91,255,0.32)';
         ctx.fill();
-        ctx.shadowBlur = 0;
       }
-
-      // Draw energy wave line across center
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(15, 91, 255, 0.15)';
-      ctx.lineWidth = 2;
-      for (let x = 0; x < width; x += 10) {
-        const y = height * 0.5 + Math.sin(x * 0.005 + time) * 40 + Math.cos(x * 0.01 - time * 0.5) * 20;
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-
       animationFrameId = requestAnimationFrame(render);
     };
 
@@ -130,28 +69,30 @@ export const HeroAnimationPlaceholder: React.FC<HeroAnimationPlaceholderProps> =
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [videoSrc]);
+  }, [hasVideo]);
 
   return (
-    <div className={`absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0 ${className}`}>
-      {videoSrc ? (
+    <div className={`pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden bg-[#020308] ${className}`}>
+      {hasVideo ? (
         <video
           autoPlay
-          loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          preload="metadata"
+          poster={posterSrc}
+          className="h-full w-full object-contain object-center sm:object-cover"
+          aria-hidden="true"
         >
-          <source src={videoSrc} type="video/mp4" />
-          <source src={videoSrc} type="video/webm" />
+          {videoWebmSrc && <source src={videoWebmSrc} type="video/webm" />}
+          {videoMp4Src && <source src={videoMp4Src} type="video/mp4" />}
         </video>
       ) : (
-        <canvas ref={canvasRef} className="w-full h-full object-cover block" />
+        <canvas ref={canvasRef} className="block h-full w-full object-cover" />
       )}
 
-      {/* Dark overlay gradients for crisp readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#000000]/80 via-[#020308]/75 to-[#020308]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#020308]/40 to-[#020308]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#020308]/28 via-transparent to-[#020308]/55" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_48%,rgba(2,3,8,0.28)_72%,#020308_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#020308] to-transparent" />
     </div>
   );
 };

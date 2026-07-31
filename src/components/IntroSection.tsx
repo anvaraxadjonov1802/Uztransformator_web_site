@@ -26,13 +26,29 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
             className="pointer-events-none absolute inset-0 hidden h-full w-full overflow-visible sm:block"
           >
             <defs>
-              <linearGradient id="intro-neon-a" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#00F0FF" />
-                <stop offset="55%" stopColor="#0F5BFF" />
-                <stop offset="100%" stopColor="#6A35FF" />
+              <linearGradient id="intro-cyan" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#7EFFFF" />
+                <stop offset="45%" stopColor="#00E8FF" />
+                <stop offset="100%" stopColor="#00A8FF" />
               </linearGradient>
-              <filter id="intro-neon-glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="5" result="blur" />
+              <linearGradient id="intro-blue" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#74B8FF" />
+                <stop offset="50%" stopColor="#1D72FF" />
+                <stop offset="100%" stopColor="#3B45FF" />
+              </linearGradient>
+              <linearGradient id="intro-violet" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#A6B1FF" />
+                <stop offset="50%" stopColor="#6E71FF" />
+                <stop offset="100%" stopColor="#8C47FF" />
+              </linearGradient>
+              <filter id="intro-glow-soft" x="-80%" y="-250%" width="260%" height="600%">
+                <feGaussianBlur stdDeviation="8.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                </feMerge>
+              </filter>
+              <filter id="intro-glow-core" x="-60%" y="-180%" width="220%" height="460%">
+                <feGaussianBlur stdDeviation="2.2" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -44,35 +60,78 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
               'M -40 330 H 250 Q 278 330 294 300 L 410 75 Q 425 45 458 45 H 1240',
               'M -60 375 H 310 Q 340 375 355 346 L 470 122 Q 486 92 520 92 H 1240',
               'M 310 490 H 650 Q 680 490 695 458 L 812 218 Q 828 184 862 184 H 1240',
-            ].map((path, index) => (
-              <g key={path}>
-                <path
-                  d={path}
-                  fill="none"
-                  stroke="rgba(15,91,255,0.13)"
-                  strokeWidth="2"
-                  vectorEffect="non-scaling-stroke"
-                />
-                <motion.path
-                  d={path}
-                  fill="none"
-                  stroke="url(#intro-neon-a)"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                  filter="url(#intro-neon-glow)"
-                  strokeDasharray="150 760"
-                  initial={{ strokeDashoffset: index % 2 === 0 ? 900 : -800 }}
-                  animate={{ strokeDashoffset: index % 2 === 0 ? -800 : 900 }}
-                  transition={{
-                    duration: 8.5 + index * 1.8,
-                    ease: 'linear',
-                    repeat: Infinity,
-                    delay: index * 0.7,
-                  }}
-                />
-              </g>
-            ))}
+            ].map((path, index) => {
+              const gradientId = index === 0 ? 'url(#intro-cyan)' : index === 1 ? 'url(#intro-violet)' : 'url(#intro-blue)';
+              const directionForward = index % 2 === 0;
+
+              return (
+                <g key={path}>
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke="rgba(24,58,122,0.55)"
+                    strokeWidth="1.3"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke={gradientId}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#intro-glow-soft)"
+                    opacity="0.38"
+                    strokeDasharray="92 1120"
+                    initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
+                    animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
+                    transition={{
+                      duration: 5.8 + index * 0.8,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      delay: index * 0.5,
+                    }}
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke={gradientId}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#intro-glow-core)"
+                    opacity="0.95"
+                    strokeDasharray="72 1140"
+                    initial={{ strokeDashoffset: directionForward ? 900 : -900 }}
+                    animate={{ strokeDashoffset: directionForward ? -900 : 900 }}
+                    transition={{
+                      duration: 5.8 + index * 0.8,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      delay: index * 0.5,
+                    }}
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke="#E9FFFF"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    opacity="0.92"
+                    strokeDasharray="20 1192"
+                    initial={{ strokeDashoffset: directionForward ? 924 : -924 }}
+                    animate={{ strokeDashoffset: directionForward ? -924 : 924 }}
+                    transition={{
+                      duration: 4.9 + index * 0.75,
+                      ease: 'linear',
+                      repeat: Infinity,
+                      delay: 0.16 + index * 0.48,
+                    }}
+                  />
+                </g>
+              );
+            })}
           </svg>
 
           <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-0">

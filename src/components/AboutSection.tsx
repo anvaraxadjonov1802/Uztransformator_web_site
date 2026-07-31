@@ -24,53 +24,94 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
             className="pointer-events-none absolute inset-0 hidden h-full w-full overflow-visible sm:block"
           >
             <defs>
-              <linearGradient id="about-neon-a" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#00F0FF" />
-                <stop offset="55%" stopColor="#0F5BFF" />
-                <stop offset="100%" stopColor="#6A35FF" />
+              <linearGradient id="about-cyan" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#7EFFFF" />
+                <stop offset="45%" stopColor="#00E8FF" />
+                <stop offset="100%" stopColor="#00A8FF" />
               </linearGradient>
-              <filter id="about-neon-glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="5" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
+              <linearGradient id="about-blue" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#74B8FF" />
+                <stop offset="50%" stopColor="#1D72FF" />
+                <stop offset="100%" stopColor="#3B45FF" />
+              </linearGradient>
+              <linearGradient id="about-violet" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#A6B1FF" />
+                <stop offset="50%" stopColor="#6E71FF" />
+                <stop offset="100%" stopColor="#8C47FF" />
+              </linearGradient>
+              <filter id="about-glow-soft" x="-80%" y="-250%" width="260%" height="600%">
+                <feGaussianBlur stdDeviation="8.5" result="blur" />
+                <feMerge><feMergeNode in="blur" /></feMerge>
+              </filter>
+              <filter id="about-glow-core" x="-60%" y="-180%" width="220%" height="460%">
+                <feGaussianBlur stdDeviation="2.2" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
             </defs>
 
             {[
-              'M -40 120 H 1240',
-              'M 740 30 H 1240',
-              'M 0 430 H 420 Q 462 430 486 398 L 560 305',
-            ].map((path, index) => (
-              <g key={path}>
-                <path
-                  d={path}
-                  fill="none"
-                  stroke="rgba(15,91,255,0.13)"
-                  strokeWidth="2"
-                  vectorEffect="non-scaling-stroke"
-                />
-                <motion.path
-                  d={path}
-                  fill="none"
-                  stroke="url(#about-neon-a)"
-                  strokeWidth="2.6"
-                  strokeLinecap="round"
-                  vectorEffect="non-scaling-stroke"
-                  filter="url(#about-neon-glow)"
-                  strokeDasharray="150 760"
-                  initial={{ strokeDashoffset: index % 2 === 0 ? 900 : -800 }}
-                  animate={{ strokeDashoffset: index % 2 === 0 ? -800 : 900 }}
-                  transition={{
-                    duration: 8.5 + index * 1.8,
-                    ease: 'linear',
-                    repeat: Infinity,
-                    delay: index * 0.7,
-                  }}
-                />
-              </g>
-            ))}
+              'M -90 114 H 1240',
+              'M 690 34 H 1240',
+              'M -40 385 H 180',
+              'M 0 430 H 420 Q 462 430 486 398 L 560 305 H 840',
+              'M 1090 86 H 1240',
+            ].map((path, index) => {
+              const gradientId = index === 0 ? 'url(#about-cyan)' : index === 1 ? 'url(#about-violet)' : index === 2 ? 'url(#about-cyan)' : index === 3 ? 'url(#about-blue)' : 'url(#about-violet)';
+              const directionForward = index % 2 === 0;
+
+              return (
+                <g key={path}>
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke="rgba(24,58,122,0.55)"
+                    strokeWidth="1.3"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke={gradientId}
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#about-glow-soft)"
+                    opacity="0.38"
+                    strokeDasharray="92 1120"
+                    initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
+                    animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
+                    transition={{ duration: 5.4 + index * 0.62, ease: 'linear', repeat: Infinity, delay: index * 0.5 }}
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke={gradientId}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    filter="url(#about-glow-core)"
+                    opacity="0.95"
+                    strokeDasharray="72 1140"
+                    initial={{ strokeDashoffset: directionForward ? 900 : -900 }}
+                    animate={{ strokeDashoffset: directionForward ? -900 : 900 }}
+                    transition={{ duration: 5.4 + index * 0.62, ease: 'linear', repeat: Infinity, delay: index * 0.5 }}
+                  />
+                  <motion.path
+                    d={path}
+                    fill="none"
+                    stroke="#E9FFFF"
+                    strokeWidth="0.75"
+                    strokeLinecap="round"
+                    vectorEffect="non-scaling-stroke"
+                    opacity="0.92"
+                    strokeDasharray="20 1192"
+                    initial={{ strokeDashoffset: directionForward ? 924 : -924 }}
+                    animate={{ strokeDashoffset: directionForward ? -924 : 924 }}
+                    transition={{ duration: 4.6 + index * 0.58, ease: 'linear', repeat: Infinity, delay: 0.16 + index * 0.48 }}
+                  />
+                </g>
+              );
+            })}
           </svg>
 
           <div className="relative z-10 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-0">

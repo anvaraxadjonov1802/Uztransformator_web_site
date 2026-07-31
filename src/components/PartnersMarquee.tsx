@@ -27,11 +27,11 @@ export const PartnersMarquee: React.FC<PartnersMarqueeProps> = ({ currentLang })
         </p>
       </div>
 
-      <div className="relative w-full overflow-hidden py-4">
+      <div className="relative w-full overflow-hidden py-10">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-16 bg-gradient-to-r from-[#020308] via-[#020308]/80 to-transparent sm:w-36" />
         <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-16 bg-gradient-to-l from-[#020308] via-[#020308]/80 to-transparent sm:w-36" />
 
-        <div className="animate-marquee-left flex w-max items-center gap-5 sm:gap-8">
+        <div className="animate-marquee-left flex w-max items-center gap-6 px-3 sm:gap-10">
           {marqueeItems.map((partner, index) => (
             <a
               key={`${partner.id}-${index}`}
@@ -40,14 +40,19 @@ export const PartnersMarquee: React.FC<PartnersMarqueeProps> = ({ currentLang })
               rel="noopener noreferrer"
               aria-label={`${partner.name} rasmiy saytiga o‘tish`}
               title={partner.name}
-              className="group flex h-24 min-w-[190px] items-center justify-center overflow-hidden rounded-2xl border border-[#0F5BFF]/20 bg-white px-6 shadow-[0_12px_30px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-[#00F0FF]/70 hover:shadow-[0_16px_34px_rgba(15,91,255,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00F0FF] sm:h-28 sm:min-w-[230px] sm:px-8"
+              className="group relative z-0 block h-24 min-w-[190px] transition-all duration-500 ease-out hover:z-10 hover:scale-[1.08] focus:z-10 focus:outline-none focus-visible:scale-[1.08] sm:h-28 sm:min-w-[230px]"
             >
-              <img
-                src={partner.logo}
-                alt={partner.name}
-                loading="lazy"
-                className="max-h-[68px] w-full max-w-[175px] object-contain object-center transition-transform duration-300 group-hover:scale-[1.045] sm:max-h-[78px] sm:max-w-[195px]"
-              />
+              <span className="pointer-events-none absolute -inset-4 rounded-[28px] bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.28)_0%,rgba(15,91,255,0.16)_38%,transparent_72%)] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+
+              <span className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl border border-[#0F5BFF]/20 bg-white px-6 shadow-[0_12px_30px_rgba(0,0,0,0.38)] transition-all duration-500 group-hover:border-[#75F7FF]/80 group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.58),0_0_22px_rgba(0,240,255,0.22),0_0_46px_rgba(15,91,255,0.16)] group-focus-visible:border-[#75F7FF]/80 group-focus-visible:shadow-[0_20px_48px_rgba(0,0,0,0.58),0_0_22px_rgba(0,240,255,0.22)] sm:px-8">
+                <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(255,255,255,0.85),transparent_67%)] opacity-45 transition-opacity duration-500 group-hover:opacity-80" />
+                <img
+                  src={partner.logo}
+                  alt={partner.name}
+                  loading="lazy"
+                  className="relative z-10 max-h-[68px] w-full max-w-[175px] object-contain object-center transition-all duration-500 group-hover:scale-[1.045] group-hover:drop-shadow-[0_8px_14px_rgba(0,0,0,0.22)] sm:max-h-[78px] sm:max-w-[195px]"
+                />
+              </span>
             </a>
           ))}
         </div>
