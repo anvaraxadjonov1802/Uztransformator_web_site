@@ -72,6 +72,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onSelect,
 }) => {
   const t = translations[currentLang].catalog;
+  const primarySpecValue = product.specs[0]
+    ? typeof product.specs[0].value === 'string'
+      ? product.specs[0].value
+      : product.specs[0].value[currentLang]
+    : '';
 
   return (
     <motion.div
@@ -118,7 +123,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {product.specs[0].label[currentLang]}:
               </span>
               <span className="font-mono text-sm font-bold text-[#00F0FF]">
-                {product.specs[0].value}
+                {primarySpecValue}
               </span>
             </div>
           </div>

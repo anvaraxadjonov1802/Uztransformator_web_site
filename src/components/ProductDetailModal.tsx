@@ -36,7 +36,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
       onClick={onClose}
     >
       <div
@@ -48,7 +48,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-[#00F0FF]" />
             <span className="text-xs font-mono font-bold tracking-widest text-[#00F0FF] uppercase">
-              MAHSULOT PASPORTI & PASPORT DATA
+              {t.passportTitle}
             </span>
           </div>
           <button
@@ -66,7 +66,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           {/* Main Title & Category */}
           <div>
             <span className="inline-block px-2.5 py-1 rounded bg-[#0F5BFF]/20 text-[#00F0FF] text-xs font-mono tracking-widest uppercase mb-2">
-              {product.category}
+              {product.category.toUpperCase()}
             </span>
             <h2 className="font-display font-bold text-2xl sm:text-3xl text-white">
               {product.name[currentLang]}
@@ -75,7 +75,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
           {/* Image & Description Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <div className="md:col-span-5 bg-[#051438] rounded-xl p-4 border border-[#0F5BFF]/20 flex items-center justify-center min-h-[220px]">
+            <div className="md:col-span-5 bg-black rounded-xl p-4 border border-[#0F5BFF]/20 flex items-center justify-center min-h-[220px]">
               <img
                 src={product.image}
                 alt={product.name[currentLang]}
@@ -85,7 +85,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
             <div className="md:col-span-7 space-y-3">
               <h3 className="text-sm font-bold text-[#00F0FF] uppercase tracking-wider">
-                Tavsif
+                {t.descriptionTitle}
               </h3>
               <p className="text-sm text-slate-300 leading-relaxed">
                 {product.fullDesc[currentLang]}
@@ -110,7 +110,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         {spec.label[currentLang]}
                       </td>
                       <td className="px-4 py-2.5 text-white font-mono font-semibold">
-                        {spec.value}
+                        {typeof spec.value === 'string' ? spec.value : spec.value[currentLang]}
                       </td>
                     </tr>
                   ))}
@@ -124,7 +124,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <div className="p-4 sm:p-6 border-t border-[#0F5BFF]/30 bg-[#08265F]/40 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-xs text-slate-300">
             <CheckCircle2 className="w-4 h-4 text-[#00F0FF]" />
-            <span>Rasmiy kafolat va yetkazib berish xizmati</span>
+            <span>{t.warrantyText}</span>
           </div>
 
           <button

@@ -1,20 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# UZTRANSFORMATOR — Final Website
 
-# Run and deploy your AI Studio app
+React + TypeScript + Vite asosidagi UZTRANSFORMATOR korporativ sayti.
 
-This contains everything you need to run your app locally.
+## Ishga tushirish
 
-View your app in AI Studio: https://ai.studio/apps/3b2f189f-73b2-4b9c-8181-90bb1442ac93
+```bash
+npm install
+npm run dev
+```
 
-## Run Locally
+Production build:
 
-**Prerequisites:**  Node.js
+```bash
+npm run build
+npm run preview
+```
 
+## Katalog
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Katalog `src/data/products.ts` faylida saqlanadi. Final katalog taqdim etilgan UZTRANSFORMATOR saytida ko‘rsatilgan 7 ta mahsulotdan iborat:
+
+- 4 ta TMG transformator varianti
+- 2 ta KTP podstansiya varianti
+- 1 ta RU taqsimlash qurilmasi
+
+Mahsulot rasmlari `public/assets/catalog/` ichiga WebP formatida joylashtirilgan.

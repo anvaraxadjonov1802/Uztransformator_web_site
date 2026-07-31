@@ -1,10 +1,10 @@
 export type Language = 'uz' | 'ru' | 'en';
 
-export type ProductCategory = 'all' | 'transformers' | 'substations' | 'electrical' | 'others';
+export type ProductCategory = 'all' | 'tmg' | 'ktp' | 'ru';
 
 export interface ProductSpec {
   label: Record<Language, string>;
-  value: string;
+  value: string | Record<Language, string>;
 }
 
 export interface Product {

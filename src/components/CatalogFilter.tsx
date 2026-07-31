@@ -61,10 +61,9 @@ export const CatalogFilter: React.FC<CatalogFilterProps> = ({
 
   const categories: Array<{ id: ProductCategory; label: string }> = [
     { id: "all", label: t.all },
-    { id: "transformers", label: t.transformers },
-    { id: "substations", label: t.substations },
-    { id: "electrical", label: t.electrical },
-    { id: "others", label: t.others },
+    { id: "tmg", label: t.tmg },
+    { id: "ktp", label: t.ktp },
+    { id: "ru", label: t.ru },
   ];
 
   return (

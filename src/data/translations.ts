@@ -23,14 +23,16 @@ export interface Translations {
     title: string;
     subtitle: string;
     all: string;
-    transformers: string;
-    substations: string;
-    electrical: string;
-    others: string;
+    tmg: string;
+    ktp: string;
+    ru: string;
     detailsBtn: string;
     specsTitle: string;
     inquireBtn: string;
     closeModal: string;
+    passportTitle: string;
+    descriptionTitle: string;
+    warrantyText: string;
   };
   about: {
     title: string;
@@ -99,14 +101,16 @@ export const translations: Record<Language, Translations> = {
       title: 'Katalog',
       subtitle: 'Yuqori kuchlanishli va ishonchli elektrotexnika uskunalarining keng assortimenti',
       all: 'Barchasi',
-      transformers: 'Transformatorlar',
-      substations: 'Komplekt uskunalar',
-      electrical: 'Elektrotexnika',
-      others: 'Boshqalar',
+      tmg: 'TMG',
+      ktp: 'KTP',
+      ru: 'RU',
       detailsBtn: 'Batafsil',
       specsTitle: 'Texnik ko‘rsatkichlar',
       inquireBtn: 'Buyurtma berish',
       closeModal: 'Yopish',
+      passportTitle: 'Mahsulot pasporti',
+      descriptionTitle: 'Tavsif',
+      warrantyText: 'Rasmiy kafolat va yetkazib berish xizmati',
     },
     about: {
       title: 'Kompaniya haqida',
@@ -173,14 +177,16 @@ export const translations: Record<Language, Translations> = {
       title: 'Каталог',
       subtitle: 'Широкий ассортимент высоковольтного и энергетического оборудования',
       all: 'Все',
-      transformers: 'Трансформаторы',
-      substations: 'Комплектные устройства',
-      electrical: 'Электротехника',
-      others: 'Другое',
+      tmg: 'ТМГ',
+      ktp: 'КТП',
+      ru: 'РУ',
       detailsBtn: 'Подробнее',
       specsTitle: 'Технические характеристики',
       inquireBtn: 'Оставить заявку',
       closeModal: 'Закрыть',
+      passportTitle: 'Паспорт продукта',
+      descriptionTitle: 'Описание',
+      warrantyText: 'Официальная гарантия и услуга доставки',
     },
     about: {
       title: 'О компании',
@@ -247,14 +253,16 @@ export const translations: Record<Language, Translations> = {
       title: 'Catalog',
       subtitle: 'High-voltage transformers and complete electrical power equipment',
       all: 'All Products',
-      transformers: 'Transformers',
-      substations: 'Package Substations',
-      electrical: 'Electrical Equipment',
-      others: 'Other Units',
+      tmg: 'TMG',
+      ktp: 'KTP',
+      ru: 'RU',
       detailsBtn: 'Details',
       specsTitle: 'Technical Specifications',
       inquireBtn: 'Request Quote',
       closeModal: 'Close',
+      passportTitle: 'Product passport',
+      descriptionTitle: 'Description',
+      warrantyText: 'Official warranty and delivery service',
     },
     about: {
       title: 'About Us',
