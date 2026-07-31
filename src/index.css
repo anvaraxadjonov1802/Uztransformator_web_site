@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #020308;
+    color: #FFFFFF;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Rajdhani', 'Syne', sans-serif;
+  }
+}
+
+/* Custom Utilities for Industrial Geometric Editorial Aesthetic */
+
+.bg-dot-grid {
+  background-image: radial-gradient(circle at 2px 2px, rgba(15, 91, 255, 0.12) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.clip-path-polygon {
+  clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+}
+
+.clip-angled-left {
+  clip-path: polygon(0 0, 100% 0, 93% 100%, 0% 100%);
+}
+
+.clip-angled-right {
+  clip-path: polygon(7% 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.clip-angled-mobile {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.clip-rhombus {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* Neon Glows & Electric Accents */
+.electric-glow {
+  box-shadow: 0 0 25px rgba(15, 91, 255, 0.35), 0 0 50px rgba(0, 240, 255, 0.15);
+}
+
+.electric-glow-sm {
+  box-shadow: 0 0 12px rgba(15, 91, 255, 0.25);
+}
+
+.electric-text-glow {
+  text-shadow: 0 0 15px rgba(15, 91, 255, 0.6), 0 0 30px rgba(0, 240, 255, 0.3);
+}
+
+/* Infinite Marquee Animation for Partners */
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 32s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-left {
+    animation-duration: 90s;
+  }
+}
+
+/* Moving Stroke Dashflow for SVG Neon Paths */
+@keyframes stroke-travel {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-stroke-travel {
+  stroke-dasharray: 120 400;
+  animation: stroke-travel 8s linear infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020308;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #08265F;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 91, 255, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0F5BFF;
+}
+
+
+/* Catalog Filter & Card Neon Motions */
+@keyframes neon-line-in-left {
+  0% { transform: translateX(-130%); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateX(230%); opacity: 0; }
+}
+
+@keyframes neon-line-in-right {
+  0% { transform: translateX(130%); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateX(-230%); opacity: 0; }
+}
+
+.animate-neon-line-in-left { animation: neon-line-in-left 3.8s linear infinite; }
+.animate-neon-line-in-left-delayed { animation: neon-line-in-left 4.4s linear infinite 0.9s; }
+.animate-neon-line-in-right { animation: neon-line-in-right 3.8s linear infinite; }
+.animate-neon-line-in-right-delayed { animation: neon-line-in-right 4.4s linear infinite 0.9s; }
+
+@keyframes border-run-top {
+  0% { transform: translateX(-140%); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateX(360%); opacity: 0; }
+}
+@keyframes border-run-top-fast {
+  0% { transform: translateX(-150%); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateX(420%); opacity: 0; }
+}
+@keyframes border-run-top-slow {
+  0% { transform: translateX(-150%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateX(300%); opacity: 0; }
+}
+@keyframes border-run-right {
+  0% { transform: translateY(-150%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateY(320%); opacity: 0; }
+}
+@keyframes border-run-left {
+  0% { transform: translateY(150%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateY(-320%); opacity: 0; }
+}
+@keyframes border-run-bottom {
+  0% { transform: translateX(140%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateX(-330%); opacity: 0; }
+}
+@keyframes border-run-bottom-fast {
+  0% { transform: translateX(150%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateX(-420%); opacity: 0; }
+}
+@keyframes border-run-bottom-slow {
+  0% { transform: translateX(150%); opacity: 0; }
+  18% { opacity: 1; }
+  100% { transform: translateX(-280%); opacity: 0; }
+}
+
+.animate-border-run-top { animation: border-run-top 4.2s linear infinite; }
+.animate-border-run-top-fast { animation: border-run-top-fast 3.3s linear infinite; }
+.animate-border-run-top-slow { animation: border-run-top-slow 5.2s linear infinite; }
+.animate-border-run-top-delayed { animation: border-run-top 4.6s linear infinite 0.8s; }
+.animate-border-run-right { animation: border-run-right 4.5s linear infinite; }
+.animate-border-run-right-delayed { animation: border-run-right 5s linear infinite 0.6s; }
+.animate-border-run-left { animation: border-run-left 4.5s linear infinite; }
+.animate-border-run-left-delayed { animation: border-run-left 5.1s linear infinite 0.7s; }
+.animate-border-run-bottom { animation: border-run-bottom 4.4s linear infinite; }
+.animate-border-run-bottom-fast { animation: border-run-bottom-fast 3.2s linear infinite; }
+.animate-border-run-bottom-slow { animation: border-run-bottom-slow 5.1s linear infinite; }
+
+/* Full-width catalog filter neon signals */
+@keyframes filter-signal-left {
+  0% { left: -9rem; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: calc(100% + 1rem); opacity: 0; }
+}
+
+@keyframes filter-signal-right {
+  0% { right: -9rem; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { right: calc(100% + 1rem); opacity: 0; }
+}
+
+.animate-filter-signal-left {
+  animation: filter-signal-left 5.2s linear infinite;
+}
+
+.animate-filter-signal-left-delayed {
+  animation: filter-signal-left 6.1s linear infinite 1.1s;
+}
+
+.animate-filter-signal-right {
+  animation: filter-signal-right 5.2s linear infinite;
+}
+
+.animate-filter-signal-right-delayed {
+  animation: filter-signal-right 6.1s linear infinite 1.1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-filter-signal-left,
+  .animate-filter-signal-left-delayed,
+  .animate-filter-signal-right,
+  .animate-filter-signal-right-delayed {
+    animation-duration: 14s;
+  }
+}
+
+/* About section neon contour movement */
+@keyframes about-neon-forward {
+  0% { stroke-dashoffset: 880; opacity: 0; }
+  12% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+@keyframes about-neon-reverse {
+  0% { stroke-dashoffset: -760; opacity: 0; }
+  15% { opacity: 1; }
+  84% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+.animate-about-neon-forward {
+  animation: about-neon-forward 6.8s linear infinite;
+}
+
+.animate-about-neon-reverse {
+  animation: about-neon-reverse 7.4s linear infinite;
+}
+
+.animate-about-neon-reverse-delayed {
+  animation: about-neon-reverse 8.2s linear infinite 1.2s;
+}
+
+/* Final About section geometry based on the approved sketch */
+.about-image-panel,
+.about-text-panel {
+  border-radius: 28px;
+}
+
+@media (min-width: 1024px) {
+  .about-image-panel {
+    border-radius: 26px 0 0 26px;
+    clip-path: polygon(0% 0%, 100% 0%, 87% 100%, 0% 100%);
+  }
+
+  .about-text-panel {
+    border-radius: 0 26px 26px 0;
+    clip-path: polygon(14% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}

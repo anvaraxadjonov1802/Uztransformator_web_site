@@ -1,0 +1,6 @@
+{
+  "name": "UZTRANSFORMATOR",
+  "description": "Official website for UZTRANSFORMATOR - Electrical engineering, energy infrastructure, and industrial transformer solutions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
