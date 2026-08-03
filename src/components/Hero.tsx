@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { ChevronDown } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../data/translations';
-import { HeroAnimationPlaceholder } from './HeroAnimationPlaceholder';
+import { HeroCableScene } from './HeroCableScene';
 
 interface HeroProps {
   currentLang: Language;
@@ -26,12 +26,8 @@ export const Hero: React.FC<HeroProps> = ({ currentLang }) => {
       id="hero"
       className="relative min-h-[100svh] w-full flex flex-col items-center justify-center bg-[#020308] overflow-hidden px-4"
     >
-      {/* Optimized hero cable animation. Text remains a separate code layer. */}
-      <HeroAnimationPlaceholder
-        videoMp4Src="/assets/hero/uztransformator-hero.mp4"
-        videoWebmSrc="/assets/hero/uztransformator-hero.webm"
-        posterSrc="/assets/hero/uztransformator-hero-poster.webp"
-      />
+      {/* Dependency-free WebGL cable animation. Text remains a separate code layer. */}
+      <HeroCableScene />
 
       {/* Hero Visual Foreground Content */}
       <div className="relative z-10 w-full max-w-[1440px] mx-auto text-center flex flex-col items-center justify-center px-1 pt-24 pb-20">

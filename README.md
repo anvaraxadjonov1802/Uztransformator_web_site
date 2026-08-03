@@ -1,4 +1,4 @@
-# UZTRANSFORMATOR — Final Website
+# UZTRANSFORMATOR
 
 React + TypeScript + Vite asosidagi UZTRANSFORMATOR korporativ sayti.
 
@@ -13,15 +13,22 @@ Production build:
 
 ```bash
 npm run build
-npm run preview
 ```
 
-## Katalog
+## Hero animatsiya
 
-Katalog `src/data/products.ts` faylida saqlanadi. Final katalog taqdim etilgan UZTRANSFORMATOR saytida ko‘rsatilgan 7 ta mahsulotdan iborat:
+Hero bo‘limidagi animatsiya `src/components/HeroCableScene.tsx` ichida dependency-free WebGL orqali ishlaydi.
 
-- 4 ta TMG transformator varianti
-- 2 ta KTP podstansiya varianti
-- 1 ta RU taqsimlash qurilmasi
+- Chapdan 12 ta cyan uchli sim
+- O‘ngdan 12 ta violet uchli sim
+- Har bir simning tezligi, qalinligi, egilishi, chuqurligi va tip yorqinligi alohida
+- Simlar to‘liq fizik obyekt sifatida ekran bo‘ylab harakatlanadi
+- Loop faqat barcha simlar ekran tashqarisiga chiqqandan keyin qayta boshlanadi
+- WebGL ishlamasa poster rasm fallback sifatida ko‘rsatiladi
 
-Mahsulot rasmlari `public/assets/catalog/` ichiga WebP formatida joylashtirilgan.
+Animatsiyaning asosiy sozlamalari fayl boshidagi konstantalarda:
+
+- `CABLES_PER_SIDE`
+- `CYCLE_DURATION`
+- `BASE_CABLE_LENGTH`
+- `WORLD_HEIGHT`
