@@ -10,6 +10,15 @@ interface IntroSectionProps {
 export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
   const t = translations[currentLang].intro;
 
+  const introTracePaths = [
+    'M -70 112 H 268 V 76 H 682 V 36 H 1240',
+    'M -88 166 H 222 V 136 H 612 V 96 H 1240',
+    'M -58 220 H 324 V 182 H 742 V 144 H 1240',
+    'M -92 318 H 198 V 352 H 480 V 300 H 840 V 248 H 1240',
+    'M -74 382 H 286 V 424 H 662 V 374 H 1034 V 330 H 1240',
+    'M 128 474 H 432 V 446 H 760 V 402 H 1240',
+  ] as const;
+
   return (
     <section id="intro" className="relative overflow-hidden site-section-surface py-20 lg:py-32">
       {/* Subtle ambient light only — the section stays close to black. */}
@@ -56,12 +65,9 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
               </filter>
             </defs>
 
-            {[
-              'M -40 330 H 250 Q 278 330 294 300 L 410 75 Q 425 45 458 45 H 1240',
-              'M -60 375 H 310 Q 340 375 355 346 L 470 122 Q 486 92 520 92 H 1240',
-              'M 310 490 H 650 Q 680 490 695 458 L 812 218 Q 828 184 862 184 H 1240',
-            ].map((path, index) => {
-              const gradientId = index === 0 ? 'url(#intro-cyan)' : index === 1 ? 'url(#intro-violet)' : 'url(#intro-blue)';
+            {introTracePaths.map((path, index) => {
+              const gradients = ['url(#intro-cyan)', 'url(#intro-blue)', 'url(#intro-violet)', 'url(#intro-cyan)', 'url(#intro-blue)', 'url(#intro-violet)'] as const;
+              const gradientId = gradients[index % gradients.length];
               const directionForward = index % 2 === 0;
 
               return (
@@ -69,64 +75,69 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
                   <path
                     d={path}
                     fill="none"
-                    stroke="rgba(15,91,255,0.42)"
-                    strokeWidth="1.5"
+                    stroke="rgba(20,94,255,0.18)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="6.5"
+                    strokeWidth="8.8"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#intro-glow-soft)"
-                    opacity="0.68"
-                    strokeDasharray="92 1120"
-                    initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
-                    animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
+                    opacity="0.86"
+                    strokeDasharray="118 1400"
+                    initial={{ strokeDashoffset: directionForward ? 1020 : -1020 }}
+                    animate={{ strokeDashoffset: directionForward ? -1020 : 1020 }}
                     transition={{
-                      duration: 5.8 + index * 0.8,
+                      duration: 5.1 + index * 0.48,
                       ease: 'linear',
                       repeat: Infinity,
-                      delay: index * 0.5,
+                      delay: index * 0.3,
                     }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="2.35"
+                    strokeWidth="3.1"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#intro-glow-core)"
-                    opacity="0.95"
-                    strokeDasharray="72 1140"
-                    initial={{ strokeDashoffset: directionForward ? 900 : -900 }}
-                    animate={{ strokeDashoffset: directionForward ? -900 : 900 }}
+                    opacity="0.98"
+                    strokeDasharray="92 1420"
+                    initial={{ strokeDashoffset: directionForward ? 1060 : -1060 }}
+                    animate={{ strokeDashoffset: directionForward ? -1060 : 1060 }}
                     transition={{
-                      duration: 5.8 + index * 0.8,
+                      duration: 5.1 + index * 0.48,
                       ease: 'linear',
                       repeat: Infinity,
-                      delay: index * 0.5,
+                      delay: index * 0.3,
                     }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke="#E9FFFF"
-                    strokeWidth="0.75"
+                    strokeWidth="0.95"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
-                    opacity="0.92"
-                    strokeDasharray="20 1192"
-                    initial={{ strokeDashoffset: directionForward ? 924 : -924 }}
-                    animate={{ strokeDashoffset: directionForward ? -924 : 924 }}
+                    opacity="0.98"
+                    strokeDasharray="28 1484"
+                    initial={{ strokeDashoffset: directionForward ? 1088 : -1088 }}
+                    animate={{ strokeDashoffset: directionForward ? -1088 : 1088 }}
                     transition={{
-                      duration: 4.9 + index * 0.75,
+                      duration: 4.4 + index * 0.42,
                       ease: 'linear',
                       repeat: Infinity,
-                      delay: 0.16 + index * 0.48,
+                      delay: 0.12 + index * 0.28,
                     }}
                   />
                 </g>

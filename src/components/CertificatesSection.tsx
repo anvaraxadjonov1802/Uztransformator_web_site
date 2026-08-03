@@ -13,6 +13,19 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
   const t = translations[currentLang].certificates;
 
+  const certificateTracePaths = [
+    'M -40 110 H 240 V 82 H 580 V 54 H 860',
+    'M -40 162 H 188 V 210 H 468 V 176 H 756 V 146 H 1050',
+    'M -40 262 H 272 V 224 H 606 V 194 H 914 V 166 H 1240',
+    'M -40 352 H 236 V 392 H 540 V 334 H 864 V 304 H 1160',
+    'M 1110 112 H 1378 V 86 H 1640',
+    'M 1010 214 H 1314 V 174 H 1640',
+    'M 962 322 H 1268 V 362 H 1640',
+    'M 1180 428 H 1424 V 398 H 1640',
+    'M 200 560 H 518 V 528 H 812 V 486 H 1138',
+    'M 980 598 H 1294 V 558 H 1640',
+  ] as const;
+
   return (
     <section id="certificates" className="relative overflow-hidden site-section-surface py-20 lg:py-32">
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0F5BFF]/7 blur-[160px]" />
@@ -24,53 +37,94 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
         className="pointer-events-none absolute inset-0 hidden h-full w-full lg:block"
       >
         <defs>
-          <linearGradient id="cert-side-light" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#00F0FF" stopOpacity="0" />
-            <stop offset="45%" stopColor="#00F0FF" stopOpacity="1" />
-            <stop offset="100%" stopColor="#0F5BFF" stopOpacity="0" />
+          <linearGradient id="cert-cyan" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#7EFFFF" />
+            <stop offset="45%" stopColor="#00E8FF" />
+            <stop offset="100%" stopColor="#00A8FF" />
           </linearGradient>
-          <filter id="cert-side-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+          <linearGradient id="cert-blue" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#74B8FF" />
+            <stop offset="50%" stopColor="#1D72FF" />
+            <stop offset="100%" stopColor="#3B45FF" />
+          </linearGradient>
+          <linearGradient id="cert-violet" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#A6B1FF" />
+            <stop offset="50%" stopColor="#6E71FF" />
+            <stop offset="100%" stopColor="#8C47FF" />
+          </linearGradient>
+          <filter id="cert-glow-soft" x="-80%" y="-220%" width="260%" height="540%">
+            <feGaussianBlur stdDeviation="4.6" result="blur" />
+            <feMerge><feMergeNode in="blur" /></feMerge>
+          </filter>
+          <filter id="cert-glow-core" x="-60%" y="-180%" width="220%" height="460%">
+            <feGaussianBlur stdDeviation="1.45" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
 
-        {[170, 350, 530].map((y, index) => (
-          <g key={`left-${y}`}>
-            <path d={`M0 ${y} H250`} stroke="rgba(15,91,255,0.42)" strokeWidth="1.5" />
-            <motion.path
-              d={`M0 ${y} H250`}
-              stroke="url(#cert-side-light)"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              strokeDasharray="90 260"
-              initial={{ strokeDashoffset: 320 }}
-              animate={{ strokeDashoffset: -320 }}
-              transition={{ duration: 4.6 + index, repeat: Infinity, ease: 'linear', delay: index * 0.55 }}
-              filter="url(#cert-side-glow)"
-            />
-          </g>
-        ))}
+        {certificateTracePaths.map((path, index) => {
+          const gradients = ['url(#cert-cyan)', 'url(#cert-blue)', 'url(#cert-violet)', 'url(#cert-cyan)', 'url(#cert-blue)', 'url(#cert-violet)', 'url(#cert-cyan)', 'url(#cert-blue)', 'url(#cert-violet)', 'url(#cert-cyan)'] as const;
+          const gradientId = gradients[index % gradients.length];
+          const directionForward = index % 2 === 0;
 
-        {[190, 370, 550].map((y, index) => (
-          <g key={`right-${y}`}>
-            <path d={`M1350 ${y} H1600`} stroke="rgba(15,91,255,0.42)" strokeWidth="1.5" />
-            <motion.path
-              d={`M1350 ${y} H1600`}
-              stroke="url(#cert-side-light)"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              strokeDasharray="90 260"
-              initial={{ strokeDashoffset: -320 }}
-              animate={{ strokeDashoffset: 320 }}
-              transition={{ duration: 4.9 + index, repeat: Infinity, ease: 'linear', delay: index * 0.65 }}
-              filter="url(#cert-side-glow)"
-            />
-          </g>
-        ))}
+          return (
+            <g key={path}>
+              <path
+                d={path}
+                fill="none"
+                stroke="rgba(15,91,255,0.18)"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+              />
+              <motion.path
+                d={path}
+                fill="none"
+                stroke={gradientId}
+                strokeWidth="8.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                filter="url(#cert-glow-soft)"
+                opacity="0.86"
+                strokeDasharray="116 1420"
+                initial={{ strokeDashoffset: directionForward ? 1040 : -1040 }}
+                animate={{ strokeDashoffset: directionForward ? -1040 : 1040 }}
+                transition={{ duration: 5.0 + index * 0.3, repeat: Infinity, ease: 'linear', delay: index * 0.18 }}
+              />
+              <motion.path
+                d={path}
+                fill="none"
+                stroke={gradientId}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                filter="url(#cert-glow-core)"
+                opacity="0.98"
+                strokeDasharray="90 1446"
+                initial={{ strokeDashoffset: directionForward ? 1084 : -1084 }}
+                animate={{ strokeDashoffset: directionForward ? -1084 : 1084 }}
+                transition={{ duration: 5.0 + index * 0.3, repeat: Infinity, ease: 'linear', delay: index * 0.18 }}
+              />
+              <motion.path
+                d={path}
+                fill="none"
+                stroke="#E9FFFF"
+                strokeWidth="0.92"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                vectorEffect="non-scaling-stroke"
+                opacity="0.98"
+                strokeDasharray="26 1510"
+                initial={{ strokeDashoffset: directionForward ? 1110 : -1110 }}
+                animate={{ strokeDashoffset: directionForward ? -1110 : 1110 }}
+                transition={{ duration: 4.35 + index * 0.25, repeat: Infinity, ease: 'linear', delay: 0.1 + index * 0.16 }}
+              />
+            </g>
+          );
+        })}
       </svg>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -10,6 +10,17 @@ interface AboutSectionProps {
 export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
   const t = translations[currentLang].about;
 
+  const aboutTracePaths = [
+    'M -104 72 H 280 V 44 H 706 V 20 H 1240',
+    'M -90 122 H 198 V 158 H 532 V 118 H 1240',
+    'M -80 180 H 332 V 140 H 820 V 104 H 1240',
+    'M -70 250 H 174 V 296 H 462 V 238 H 734 V 208 H 1240',
+    'M -42 332 H 280 V 374 H 668 V 320 H 996 V 280 H 1240',
+    'M 0 410 H 218 V 458 H 560 V 404 H 1240',
+    'M -92 474 H 412 V 444 H 780 V 388 H 1240',
+    'M 944 156 H 1240',
+  ] as const;
+
   return (
     <section id="about" className="relative overflow-hidden site-section-surface py-20 lg:py-32">
       <div className="pointer-events-none absolute left-[-12rem] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-[#0F5BFF]/10 blur-[135px]" />
@@ -49,21 +60,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
               </filter>
             </defs>
 
-            {[
-              'M -110 58 H 320 Q 350 58 370 82 L 415 136 H 690',
-              'M 690 34 H 1240',
-              'M -90 114 H 1240',
-              'M -80 174 H 150 Q 182 174 204 200 L 250 254 H 430',
-              'M 955 142 H 1240',
-              'M -70 326 H 240',
-              'M 830 294 H 1240',
-              'M -40 385 H 180',
-              'M 0 430 H 420 Q 462 430 486 398 L 560 305 H 840',
-              'M 530 478 H 840 Q 874 478 894 450 L 945 378 H 1240',
-              'M -90 500 H 300',
-              'M 1010 500 H 1240',
-            ].map((path, index) => {
-              const gradientId = index === 0 ? 'url(#about-cyan)' : index === 1 ? 'url(#about-violet)' : index === 2 ? 'url(#about-cyan)' : index === 3 ? 'url(#about-blue)' : 'url(#about-violet)';
+            {aboutTracePaths.map((path, index) => {
+              const gradients = ['url(#about-cyan)', 'url(#about-violet)', 'url(#about-cyan)', 'url(#about-blue)', 'url(#about-violet)', 'url(#about-cyan)', 'url(#about-blue)', 'url(#about-violet)'] as const;
+              const gradientId = gradients[index % gradients.length];
               const directionForward = index % 2 === 0;
 
               return (
@@ -71,50 +70,55 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
                   <path
                     d={path}
                     fill="none"
-                    stroke="rgba(15,91,255,0.42)"
-                    strokeWidth="1.5"
+                    stroke="rgba(15,91,255,0.18)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="6.5"
+                    strokeWidth="8.8"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#about-glow-soft)"
-                    opacity="0.68"
-                    strokeDasharray="92 1120"
-                    initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
-                    animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
-                    transition={{ duration: 5.4 + index * 0.62, ease: 'linear', repeat: Infinity, delay: index * 0.5 }}
+                    opacity="0.86"
+                    strokeDasharray="118 1400"
+                    initial={{ strokeDashoffset: directionForward ? 1020 : -1020 }}
+                    animate={{ strokeDashoffset: directionForward ? -1020 : 1020 }}
+                    transition={{ duration: 4.9 + index * 0.38, ease: 'linear', repeat: Infinity, delay: index * 0.24 }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="2.35"
+                    strokeWidth="3.1"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#about-glow-core)"
-                    opacity="0.95"
-                    strokeDasharray="72 1140"
-                    initial={{ strokeDashoffset: directionForward ? 900 : -900 }}
-                    animate={{ strokeDashoffset: directionForward ? -900 : 900 }}
-                    transition={{ duration: 5.4 + index * 0.62, ease: 'linear', repeat: Infinity, delay: index * 0.5 }}
+                    opacity="0.98"
+                    strokeDasharray="92 1420"
+                    initial={{ strokeDashoffset: directionForward ? 1060 : -1060 }}
+                    animate={{ strokeDashoffset: directionForward ? -1060 : 1060 }}
+                    transition={{ duration: 4.9 + index * 0.38, ease: 'linear', repeat: Infinity, delay: index * 0.24 }}
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke="#E9FFFF"
-                    strokeWidth="0.75"
+                    strokeWidth="0.95"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     vectorEffect="non-scaling-stroke"
-                    opacity="0.92"
-                    strokeDasharray="20 1192"
-                    initial={{ strokeDashoffset: directionForward ? 924 : -924 }}
-                    animate={{ strokeDashoffset: directionForward ? -924 : 924 }}
-                    transition={{ duration: 4.6 + index * 0.58, ease: 'linear', repeat: Infinity, delay: 0.16 + index * 0.48 }}
+                    opacity="0.98"
+                    strokeDasharray="28 1484"
+                    initial={{ strokeDashoffset: directionForward ? 1088 : -1088 }}
+                    animate={{ strokeDashoffset: directionForward ? -1088 : 1088 }}
+                    transition={{ duration: 4.25 + index * 0.32, ease: 'linear', repeat: Infinity, delay: 0.1 + index * 0.2 }}
                   />
                 </g>
               );
