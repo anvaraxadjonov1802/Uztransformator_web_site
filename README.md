@@ -32,3 +32,8 @@ Animatsiyaning asosiy sozlamalari fayl boshidagi konstantalarda:
 - `CYCLE_DURATION`
 - `BASE_CABLE_LENGTH`
 - `WORLD_HEIGHT`
+
+
+## Global animated background
+
+The complete page uses `GlobalNetworkBackground.tsx`: an adaptive fixed canvas with slowly moving stars, twinkling highlights, subtle constellation links, mouse parallax and a reduced-motion mode. Hero cables render transparently above this background.

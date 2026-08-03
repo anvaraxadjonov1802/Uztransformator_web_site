@@ -92,7 +92,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ currentLang }) =
   ];
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-[#020308] py-20 lg:py-32">
+    <section id="contact" className="relative overflow-hidden site-section-surface py-20 lg:py-32">
       <div className="pointer-events-none absolute right-[-11rem] top-16 h-[30rem] w-[30rem] rounded-full bg-[#0F5BFF]/10 blur-[145px]" />
       <div className="pointer-events-none absolute bottom-[-10rem] left-[-9rem] h-[28rem] w-[28rem] rounded-full bg-[#00F0FF]/8 blur-[145px]" />
 

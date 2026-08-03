@@ -11,7 +11,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
   const t = translations[currentLang].intro;
 
   return (
-    <section id="intro" className="relative overflow-hidden bg-[#020308] py-20 lg:py-32">
+    <section id="intro" className="relative overflow-hidden site-section-surface py-20 lg:py-32">
       {/* Subtle ambient light only — the section stays close to black. */}
       <div className="pointer-events-none absolute left-[-12rem] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-[#0F5BFF]/10 blur-[135px]" />
       <div className="pointer-events-none absolute right-[-10rem] top-1/3 h-[24rem] w-[24rem] rounded-full bg-[#4020D8]/10 blur-[130px]" />

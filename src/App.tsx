@@ -9,6 +9,7 @@ import { CertificatesSection } from './components/CertificatesSection';
 import { PartnersMarquee } from './components/PartnersMarquee';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
+import { GlobalNetworkBackground } from './components/GlobalNetworkBackground';
 
 export default function App() {
   const [currentLang, setCurrentLang] = useState<Language>('uz');
@@ -47,12 +48,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020308] text-white flex flex-col font-sans selection:bg-[#0F5BFF] selection:text-white relative overflow-x-hidden">
-      {/* Background Dot Grid & Industrial Accents */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-dot-grid opacity-60" />
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-[#0F5BFF]/5 to-transparent skew-x-[-15deg] translate-x-20" />
-      </div>
+    <div className="relative isolate flex min-h-screen flex-col overflow-x-hidden bg-transparent font-sans text-white selection:bg-[#0F5BFF] selection:text-white">
+      <GlobalNetworkBackground />
 
       {/* Floating Navbar */}
       <Navbar
@@ -92,7 +89,9 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer currentLang={currentLang} />
+      <div className="relative z-10">
+        <Footer currentLang={currentLang} />
+      </div>
     </div>
   );
 }

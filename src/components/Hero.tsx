@@ -24,7 +24,7 @@ export const Hero: React.FC<HeroProps> = ({ currentLang }) => {
   return (
     <section
       id="hero"
-      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center bg-[#020308] overflow-hidden px-4"
+      className="relative min-h-[100svh] w-full flex flex-col items-center justify-center bg-transparent overflow-hidden px-4"
     >
       {/* Dependency-free WebGL cable animation. Text remains a separate code layer. */}
       <HeroCableScene />

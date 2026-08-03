@@ -27,7 +27,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
       : productsData.filter((p) => p.category === activeCategory);
 
   return (
-    <section id="catalog" className="relative py-20 lg:py-32 bg-[#020308] overflow-hidden">
+    <section id="catalog" className="relative py-20 lg:py-32 site-section-surface overflow-hidden">
       {/* Background Lighting Effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#0F5BFF]/5 blur-[160px] rounded-full pointer-events-none" />
 

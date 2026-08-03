@@ -485,7 +485,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
     if (!container || !canvas) return;
 
     const gl = canvas.getContext('webgl', {
-      alpha: false,
+      alpha: true,
       antialias: true,
       depth: false,
       premultipliedAlpha: false,
@@ -577,7 +577,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
 
     gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
-    gl.clearColor(0.008, 0.012, 0.031, 1);
+    gl.clearColor(0, 0, 0, 0);
 
     let viewWidth = BASE_WORLD_WIDTH;
     let halfView: Vec2 = [BASE_WORLD_WIDTH / 2, WORLD_HEIGHT / 2];
@@ -868,7 +868,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
   return (
     <div
       ref={containerRef}
-      className={`pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden bg-[#020308] ${className}`}
+      className={`pointer-events-none absolute inset-0 z-0 h-full w-full overflow-hidden bg-transparent ${className}`}
       aria-hidden="true"
     >
       {webglUnavailable ? (
@@ -881,9 +881,9 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
         <canvas ref={canvasRef} className="block h-full w-full" />
       )}
 
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,3,8,0.08)_0%,rgba(2,3,8,0.16)_42%,rgba(2,3,8,0.70)_100%)]" />
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#020308]/55 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#020308] to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,3,8,0.02)_0%,rgba(2,3,8,0.07)_44%,rgba(2,3,8,0.36)_100%)]" />
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#020308]/18 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#020308]/48 to-transparent" />
       <div className="absolute left-[-18%] top-1/2 h-[46%] w-[42%] -translate-y-1/2 rounded-full bg-[#00D9FF]/[0.035] blur-[90px]" />
       <div className="absolute right-[-18%] top-1/2 h-[46%] w-[42%] -translate-y-1/2 rounded-full bg-[#7044FF]/[0.04] blur-[90px]" />
     </div>

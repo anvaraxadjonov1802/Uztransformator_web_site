@@ -14,7 +14,7 @@ export const PartnersMarquee: React.FC<PartnersMarqueeProps> = ({ currentLang })
   return (
     <section
       id="partners"
-      className="relative overflow-hidden border-y border-[#0F5BFF]/15 bg-[#020308] py-20 lg:py-28"
+      className="relative overflow-hidden border-y border-[#0F5BFF]/15 site-section-surface py-20 lg:py-28"
     >
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[250px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#08265F]/30 blur-[140px]" />
 
