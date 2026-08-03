@@ -30,7 +30,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
             <stop offset="100%" stopColor="#0F5BFF" stopOpacity="0" />
           </linearGradient>
           <filter id="cert-side-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feGaussianBlur stdDeviation="2.6" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -40,11 +40,11 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
 
         {[170, 350, 530].map((y, index) => (
           <g key={`left-${y}`}>
-            <path d={`M0 ${y} H250`} stroke="rgba(15,91,255,0.17)" strokeWidth="2" />
+            <path d={`M0 ${y} H250`} stroke="rgba(15,91,255,0.42)" strokeWidth="1.5" />
             <motion.path
               d={`M0 ${y} H250`}
               stroke="url(#cert-side-light)"
-              strokeWidth="3"
+              strokeWidth="2.6"
               strokeLinecap="round"
               strokeDasharray="90 260"
               initial={{ strokeDashoffset: 320 }}
@@ -57,11 +57,11 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
 
         {[190, 370, 550].map((y, index) => (
           <g key={`right-${y}`}>
-            <path d={`M1350 ${y} H1600`} stroke="rgba(15,91,255,0.17)" strokeWidth="2" />
+            <path d={`M1350 ${y} H1600`} stroke="rgba(15,91,255,0.42)" strokeWidth="1.5" />
             <motion.path
               d={`M1350 ${y} H1600`}
               stroke="url(#cert-side-light)"
-              strokeWidth="3"
+              strokeWidth="2.6"
               strokeLinecap="round"
               strokeDasharray="90 260"
               initial={{ strokeDashoffset: -320 }}

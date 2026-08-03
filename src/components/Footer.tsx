@@ -11,7 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ currentLang }) => {
 
   return (
     <footer className="relative overflow-hidden border-t border-white/10 bg-[#020308]/72 px-6 backdrop-blur-[2px] py-10 text-slate-400 lg:px-12 lg:py-12">
-      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#0F5BFF]/65 to-transparent" />
+      <div className="absolute left-0 right-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent blur-[0.4px] shadow-[0_0_12px_rgba(0,240,255,0.85)]" />
 
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-7 text-center">
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">

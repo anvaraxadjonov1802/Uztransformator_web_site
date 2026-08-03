@@ -42,13 +42,13 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
                 <stop offset="100%" stopColor="#8C47FF" />
               </linearGradient>
               <filter id="intro-glow-soft" x="-80%" y="-250%" width="260%" height="600%">
-                <feGaussianBlur stdDeviation="8.5" result="blur" />
+                <feGaussianBlur stdDeviation="5.2" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                 </feMerge>
               </filter>
               <filter id="intro-glow-core" x="-60%" y="-180%" width="220%" height="460%">
-                <feGaussianBlur stdDeviation="2.2" result="blur" />
+                <feGaussianBlur stdDeviation="1.45" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -69,19 +69,19 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
                   <path
                     d={path}
                     fill="none"
-                    stroke="rgba(24,58,122,0.55)"
-                    strokeWidth="1.3"
+                    stroke="rgba(15,91,255,0.42)"
+                    strokeWidth="1.5"
                     vectorEffect="non-scaling-stroke"
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="8"
+                    strokeWidth="6.5"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#intro-glow-soft)"
-                    opacity="0.38"
+                    opacity="0.68"
                     strokeDasharray="92 1120"
                     initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
                     animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
@@ -96,7 +96,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({ currentLang }) => {
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="2"
+                    strokeWidth="2.35"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#intro-glow-core)"

@@ -40,21 +40,28 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
                 <stop offset="100%" stopColor="#8C47FF" />
               </linearGradient>
               <filter id="about-glow-soft" x="-80%" y="-250%" width="260%" height="600%">
-                <feGaussianBlur stdDeviation="8.5" result="blur" />
+                <feGaussianBlur stdDeviation="5.2" result="blur" />
                 <feMerge><feMergeNode in="blur" /></feMerge>
               </filter>
               <filter id="about-glow-core" x="-60%" y="-180%" width="220%" height="460%">
-                <feGaussianBlur stdDeviation="2.2" result="blur" />
+                <feGaussianBlur stdDeviation="1.45" result="blur" />
                 <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
               </filter>
             </defs>
 
             {[
-              'M -90 114 H 1240',
+              'M -110 58 H 320 Q 350 58 370 82 L 415 136 H 690',
               'M 690 34 H 1240',
+              'M -90 114 H 1240',
+              'M -80 174 H 150 Q 182 174 204 200 L 250 254 H 430',
+              'M 955 142 H 1240',
+              'M -70 326 H 240',
+              'M 830 294 H 1240',
               'M -40 385 H 180',
               'M 0 430 H 420 Q 462 430 486 398 L 560 305 H 840',
-              'M 1090 86 H 1240',
+              'M 530 478 H 840 Q 874 478 894 450 L 945 378 H 1240',
+              'M -90 500 H 300',
+              'M 1010 500 H 1240',
             ].map((path, index) => {
               const gradientId = index === 0 ? 'url(#about-cyan)' : index === 1 ? 'url(#about-violet)' : index === 2 ? 'url(#about-cyan)' : index === 3 ? 'url(#about-blue)' : 'url(#about-violet)';
               const directionForward = index % 2 === 0;
@@ -64,19 +71,19 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
                   <path
                     d={path}
                     fill="none"
-                    stroke="rgba(24,58,122,0.55)"
-                    strokeWidth="1.3"
+                    stroke="rgba(15,91,255,0.42)"
+                    strokeWidth="1.5"
                     vectorEffect="non-scaling-stroke"
                   />
                   <motion.path
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="8"
+                    strokeWidth="6.5"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#about-glow-soft)"
-                    opacity="0.38"
+                    opacity="0.68"
                     strokeDasharray="92 1120"
                     initial={{ strokeDashoffset: directionForward ? 880 : -880 }}
                     animate={{ strokeDashoffset: directionForward ? -880 : 880 }}
@@ -86,7 +93,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ currentLang }) => {
                     d={path}
                     fill="none"
                     stroke={gradientId}
-                    strokeWidth="2"
+                    strokeWidth="2.35"
                     strokeLinecap="round"
                     vectorEffect="non-scaling-stroke"
                     filter="url(#about-glow-core)"

@@ -12,10 +12,10 @@ interface ProductCardProps {
 }
 
 const NeonBorderMotion: React.FC<{ variant: number }> = ({ variant }) => {
-  const cyan = "bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent";
-  const blue = "bg-gradient-to-r from-transparent via-[#0F5BFF] to-transparent";
-  const verticalCyan = "bg-gradient-to-b from-transparent via-[#00F0FF] to-transparent";
-  const verticalBlue = "bg-gradient-to-b from-transparent via-[#0F5BFF] to-transparent";
+  const cyan = "bg-gradient-to-r from-transparent via-[#00F0FF] to-transparent blur-[0.4px] shadow-[0_0_12px_rgba(0,240,255,0.9)]";
+  const blue = "bg-gradient-to-r from-transparent via-[#0F5BFF] to-transparent blur-[0.4px] shadow-[0_0_10px_rgba(15,91,255,0.85)]";
+  const verticalCyan = "bg-gradient-to-b from-transparent via-[#00F0FF] to-transparent blur-[0.4px] shadow-[0_0_12px_rgba(0,240,255,0.9)]";
+  const verticalBlue = "bg-gradient-to-b from-transparent via-[#0F5BFF] to-transparent blur-[0.4px] shadow-[0_0_10px_rgba(15,91,255,0.85)]";
 
   const variants: Record<number, React.ReactNode> = {
     1: <>
