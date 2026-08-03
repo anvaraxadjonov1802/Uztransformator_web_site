@@ -91,10 +91,14 @@ const WORLD_HEIGHT = 9;
 const BASE_WORLD_WIDTH = 16;
 const BASE_CABLE_LENGTH = 12.8;
 const CABLES_PER_SIDE = 12;
-const CYCLE_DURATION = 12.8;
+const CYCLE_DURATION = 8.5;
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const mix = (from: number, to: number, amount: number) => from + (to - from) * amount;
+const smoothstep = (edge0: number, edge1: number, value: number) => {
+  const t = clamp((value - edge0) / Math.max(0.0001, edge1 - edge0));
+  return t * t * (3 - 2 * t);
+};
 
 const mulberry32 = (seed: number) => {
   let state = seed >>> 0;
@@ -236,6 +240,17 @@ const createRibbonGeometry = (
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
   return { buffer, vertexCount: samples.length * 2 };
+};
+
+const createBurstDelay = (side: CableSide, index: number, random: () => number) => {
+  const leftOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const rightOrder = [1, 0, 3, 2, 6, 4, 5, 8, 7, 10, 11, 9];
+  const groupMap = [0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3];
+  const burstStarts = side === 'left' ? [0.28, 0.66, 1.12, 1.52] : [0.12, 0.55, 0.98, 1.42];
+  const order = side === 'left' ? leftOrder[index] : rightOrder[index];
+  const burst = groupMap[order] ?? 0;
+  const within = (order - groupMap.indexOf(burst)) * 0.08;
+  return burstStarts[burst] + within + randomBetween(random, -0.05, 0.12);
 };
 
 const makeControlPoints = (
@@ -529,32 +544,35 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
         const depthScale = mix(0.88, 1.13, clamp(depth));
         const cyan = side === 'left';
 
+        const burstDelay = createBurstDelay(side, index, random);
+        const depthFactor = clamp(depth, 0, 1);
+
         cables.push({
           side,
           body: createRibbonGeometry(gl, samples),
           collar: createRibbonGeometry(gl, collarSamples),
           localTip: samples[samples.length - 1],
-          baseRadius: randomBetween(random, 0.045, 0.071) * depthScale,
+          baseRadius: randomBetween(random, 0.046, 0.074) * depthScale,
           depth,
-          delay: 0.34 + index * 0.018 + randomBetween(random, 0, 1.08),
-          travelDuration: randomBetween(random, 7.65, 9.85),
-          wobbleFrequency: randomBetween(random, 0.34, 0.78),
+          delay: burstDelay,
+          travelDuration: randomBetween(random, 4.85, 5.75) - depthFactor * 0.34,
+          wobbleFrequency: randomBetween(random, 0.28, 0.86),
           wobblePhase: randomBetween(random, 0, Math.PI * 2),
-          wobbleAmplitude: randomBetween(random, 0.025, 0.085),
-          secondaryWobbleFrequency: randomBetween(random, 0.82, 1.48),
+          wobbleAmplitude: randomBetween(random, 0.03, 0.092),
+          secondaryWobbleFrequency: randomBetween(random, 0.9, 1.64),
           secondaryWobblePhase: randomBetween(random, 0, Math.PI * 2),
-          secondaryWobbleAmplitude: randomBetween(random, 0.012, 0.048),
-          lateralDriftFrequency: randomBetween(random, 0.25, 0.58),
+          secondaryWobbleAmplitude: randomBetween(random, 0.016, 0.055),
+          lateralDriftFrequency: randomBetween(random, 0.22, 0.72),
           lateralDriftPhase: randomBetween(random, 0, Math.PI * 2),
-          lateralDriftAmplitude: randomBetween(random, 0.018, 0.064),
-          travelArcAmplitude: randomBetween(random, -0.19, 0.19),
-          travelBias: randomBetween(random, -0.52, 0.52),
-          travelSmoothness: randomBetween(random, 0.08, 0.72),
-          flexFrequency: randomBetween(random, 0.46, 1.08),
+          lateralDriftAmplitude: randomBetween(random, 0.012, 0.052),
+          travelArcAmplitude: randomBetween(random, -0.22, 0.22),
+          travelBias: randomBetween(random, -0.58, 0.58),
+          travelSmoothness: randomBetween(random, 0.22, 0.82),
+          flexFrequency: randomBetween(random, 0.52, 1.28),
           flexPhase: randomBetween(random, 0, Math.PI * 2),
-          flexAmplitude: randomBetween(random, 0.018, 0.082),
-          flexLongitudinalAmplitude: randomBetween(random, 0.006, 0.032),
-          tipPulseFrequency: randomBetween(random, 0.82, 1.75),
+          flexAmplitude: randomBetween(random, 0.02, 0.088),
+          flexLongitudinalAmplitude: randomBetween(random, 0.008, 0.034),
+          tipPulseFrequency: randomBetween(random, 0.92, 1.92),
           tipPulsePhase: randomBetween(random, 0, Math.PI * 2),
           color: cyan
             ? [0.022, randomBetween(random, 0.045, 0.065), randomBetween(random, 0.075, 0.105)]
@@ -663,9 +681,17 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
     };
 
     const shapeTravelProgress = (cable: CableRecord, progress: number) => {
+      const staged =
+        progress < 0.26
+          ? mix(0, 0.24, smoothstep(0, 0.26, progress))
+          : progress < 0.62
+            ? mix(0.24, 0.68, smoothstep(0.26, 0.62, progress))
+            : progress < 0.84
+              ? mix(0.68, 0.88, smoothstep(0.62, 0.84, progress))
+              : mix(0.88, 1, smoothstep(0.84, 1, progress));
       const smooth = progress * progress * (3 - 2 * progress);
-      const biased = progress + cable.travelBias * progress * (1 - progress);
-      return clamp(mix(biased, smooth, cable.travelSmoothness));
+      const biased = staged + cable.travelBias * progress * (1 - progress) * 0.18;
+      return clamp(mix(biased, smooth, cable.travelSmoothness * 0.55));
     };
 
     const calculateFlexOffset = (
@@ -734,30 +760,35 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
           cable.side === 'left'
             ? mix(leftStart, leftEnd, travelProgress)
             : mix(rightStart, rightEnd, travelProgress);
-        const lateralEnvelope = Math.sin(progress * Math.PI) ** 2;
+
+        const approachWeight = smoothstep(0.0, 0.24, progress) * (1 - smoothstep(0.28, 0.48, progress));
+        const crossingWeight = smoothstep(0.22, 0.46, progress) * (1 - smoothstep(0.62, 0.82, progress));
+        const exitWeight = smoothstep(0.62, 0.88, progress);
+        const cleanWeight = smoothstep(0.82, 1.0, progress);
+
+        const lateralEnvelope = 0.24 + Math.sin(progress * Math.PI) ** 2 * 0.76;
         const x =
           baseX +
-          Math.sin(
-            elapsed * cable.lateralDriftFrequency + cable.lateralDriftPhase,
-          ) *
+          Math.sin(elapsed * cable.lateralDriftFrequency + cable.lateralDriftPhase) *
             cable.lateralDriftAmplitude *
             lateralEnvelope *
-            direction;
+            direction +
+          Math.sin(progress * Math.PI * 2 + cable.travelBias) * 0.022 * direction * crossingWeight;
 
-        const fadeIn = clamp(progress / 0.045);
-        const fadeOut = clamp((1 - progress) / 0.045);
-        const alpha = Math.min(fadeIn, fadeOut);
-        const primaryY =
-          Math.sin(elapsed * cable.wobbleFrequency + cable.wobblePhase) *
-          cable.wobbleAmplitude;
-        const secondaryY =
-          Math.sin(
-            elapsed * cable.secondaryWobbleFrequency +
-              cable.secondaryWobblePhase,
-          ) * cable.secondaryWobbleAmplitude;
-        const travelArc =
-          Math.sin(progress * Math.PI) * cable.travelArcAmplitude;
-        const y = primaryY + secondaryY + travelArc;
+        const fadeIn = smoothstep(0, 0.05, progress);
+        const fadeOut = 1 - smoothstep(0.9, 1.0, progress);
+        const cleanCenterDim = 1 - cleanWeight * 0.24;
+        const alpha = fadeIn * fadeOut * cleanCenterDim;
+
+        const primaryY = Math.sin(elapsed * cable.wobbleFrequency + cable.wobblePhase) * cable.wobbleAmplitude;
+        const secondaryY = Math.sin(elapsed * cable.secondaryWobbleFrequency + cable.secondaryWobblePhase) * cable.secondaryWobbleAmplitude;
+        const breathing = Math.sin(elapsed * (cable.wobbleFrequency * 0.72) + cable.wobblePhase * 0.67) * cable.wobbleAmplitude * 0.22;
+        const entryArc = cable.travelArcAmplitude * 0.42 * Math.sin(progress * Math.PI) * (0.45 + approachWeight * 0.9);
+        const crossingArc = cable.travelArcAmplitude * 0.92 * Math.sin((progress - 0.24) * Math.PI * 1.48 + cable.travelBias * 0.7) * crossingWeight;
+        const exitArc = cable.travelArcAmplitude * 0.38 * Math.sin((progress - 0.62) * Math.PI * 1.1 + cable.travelBias) * exitWeight;
+        const laneBias = cable.travelBias * 0.11 * crossingWeight;
+        const centerClearPull = -cable.travelArcAmplitude * 0.18 * cleanWeight;
+        const y = primaryY + secondaryY + breathing + entryArc + crossingArc + exitArc + laneBias + centerClearPull;
         const translation: Vec2 = [x, y];
         const tipFlex = calculateFlexOffset(cable, elapsed, 1);
         const tip: Vec2 = [
@@ -814,10 +845,10 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
       for (const item of visibleCables) {
         const depthScale = mix(0.88, 1.14, clamp(item.cable.depth));
         const pulse =
-          0.84 +
+          0.82 +
           Math.sin(
             elapsed * item.cable.tipPulseFrequency + item.cable.tipPulsePhase,
-          ) * 0.16;
+          ) * 0.18;
         const intensity = item.cable.tipIntensity * pulse;
         const tipScale = item.cable.tipScale * (0.96 + pulse * 0.04);
         drawPoint(item.tip, item.cable.tipColor, 42 * depthScale * tipScale, item.alpha * 0.18 * intensity, true);
@@ -881,7 +912,8 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
         <canvas ref={canvasRef} className="block h-full w-full" />
       )}
 
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,3,8,0.02)_0%,rgba(2,3,8,0.07)_44%,rgba(2,3,8,0.36)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,3,8,0.01)_0%,rgba(2,3,8,0.06)_36%,rgba(2,3,8,0.34)_100%)]" />
+      <div className="absolute left-1/2 top-1/2 h-[34%] w-[60%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#020308]/38 blur-[72px]" />
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#020308]/18 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#020308]/48 to-transparent" />
       <div className="absolute left-[-18%] top-1/2 h-[46%] w-[42%] -translate-y-1/2 rounded-full bg-[#00D9FF]/[0.035] blur-[90px]" />
