@@ -25,6 +25,21 @@ interface CableRecord {
   wobbleFrequency: number;
   wobblePhase: number;
   wobbleAmplitude: number;
+  secondaryWobbleFrequency: number;
+  secondaryWobblePhase: number;
+  secondaryWobbleAmplitude: number;
+  lateralDriftFrequency: number;
+  lateralDriftPhase: number;
+  lateralDriftAmplitude: number;
+  travelArcAmplitude: number;
+  travelBias: number;
+  travelSmoothness: number;
+  flexFrequency: number;
+  flexPhase: number;
+  flexAmplitude: number;
+  flexLongitudinalAmplitude: number;
+  tipPulseFrequency: number;
+  tipPulsePhase: number;
   color: RGB;
   tint: RGB;
   tipColor: RGB;
@@ -50,6 +65,11 @@ interface CableProgramInfo {
     tipColor: WebGLUniformLocation;
     alpha: WebGLUniformLocation;
     shadowPass: WebGLUniformLocation;
+    time: WebGLUniformLocation;
+    flexAmplitude: WebGLUniformLocation;
+    flexFrequency: WebGLUniformLocation;
+    flexPhase: WebGLUniformLocation;
+    longitudinalAmplitude: WebGLUniformLocation;
   };
 }
 
@@ -260,6 +280,11 @@ const createCableProgram = (gl: WebGLRenderingContext): CableProgramInfo => {
     uniform vec2 u_scale;
     uniform vec2 u_halfView;
     uniform float u_radius;
+    uniform float u_time;
+    uniform float u_flexAmplitude;
+    uniform float u_flexFrequency;
+    uniform float u_flexPhase;
+    uniform float u_longitudinalAmplitude;
 
     varying float v_side;
     varying float v_progress;
@@ -270,6 +295,26 @@ const createCableProgram = (gl: WebGLRenderingContext): CableProgramInfo => {
         a_normal.y / max(u_scale.y, 0.0001)
       ));
       vec2 position = a_center * u_scale;
+
+      float flexEnvelope = 0.24 + 0.76 * pow(sin(a_progress * 3.14159265), 2.0);
+      float flexPrimary = sin(
+        a_progress * 5.4 +
+        u_time * u_flexFrequency +
+        u_flexPhase
+      );
+      float flexSecondary = sin(
+        a_progress * 9.2 -
+        u_time * u_flexFrequency * 0.61 +
+        u_flexPhase * 1.73
+      );
+      float flexMotion = (flexPrimary * 0.68 + flexSecondary * 0.32) * flexEnvelope;
+      position.y += flexMotion * u_flexAmplitude;
+      position.x += sin(
+        a_progress * 3.7 +
+        u_time * u_flexFrequency * 0.34 +
+        u_flexPhase * 0.83
+      ) * u_longitudinalAmplitude * flexEnvelope;
+
       position += transformedNormal * a_side * u_radius;
       position += u_translation;
 
@@ -334,6 +379,11 @@ const createCableProgram = (gl: WebGLRenderingContext): CableProgramInfo => {
       tipColor: requireUniform(gl, program, 'u_tipColor'),
       alpha: requireUniform(gl, program, 'u_alpha'),
       shadowPass: requireUniform(gl, program, 'u_shadowPass'),
+      time: requireUniform(gl, program, 'u_time'),
+      flexAmplitude: requireUniform(gl, program, 'u_flexAmplitude'),
+      flexFrequency: requireUniform(gl, program, 'u_flexFrequency'),
+      flexPhase: requireUniform(gl, program, 'u_flexPhase'),
+      longitudinalAmplitude: requireUniform(gl, program, 'u_longitudinalAmplitude'),
     },
   };
 };
@@ -486,11 +536,26 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
           localTip: samples[samples.length - 1],
           baseRadius: randomBetween(random, 0.045, 0.071) * depthScale,
           depth,
-          delay: 0.55 + index * 0.052 + randomBetween(random, 0, 0.48),
-          travelDuration: randomBetween(random, 8.45, 9.2),
-          wobbleFrequency: randomBetween(random, 0.42, 0.72),
+          delay: 0.34 + index * 0.018 + randomBetween(random, 0, 1.08),
+          travelDuration: randomBetween(random, 7.65, 9.85),
+          wobbleFrequency: randomBetween(random, 0.34, 0.78),
           wobblePhase: randomBetween(random, 0, Math.PI * 2),
-          wobbleAmplitude: randomBetween(random, 0.015, 0.047),
+          wobbleAmplitude: randomBetween(random, 0.025, 0.085),
+          secondaryWobbleFrequency: randomBetween(random, 0.82, 1.48),
+          secondaryWobblePhase: randomBetween(random, 0, Math.PI * 2),
+          secondaryWobbleAmplitude: randomBetween(random, 0.012, 0.048),
+          lateralDriftFrequency: randomBetween(random, 0.25, 0.58),
+          lateralDriftPhase: randomBetween(random, 0, Math.PI * 2),
+          lateralDriftAmplitude: randomBetween(random, 0.018, 0.064),
+          travelArcAmplitude: randomBetween(random, -0.19, 0.19),
+          travelBias: randomBetween(random, -0.52, 0.52),
+          travelSmoothness: randomBetween(random, 0.08, 0.72),
+          flexFrequency: randomBetween(random, 0.46, 1.08),
+          flexPhase: randomBetween(random, 0, Math.PI * 2),
+          flexAmplitude: randomBetween(random, 0.018, 0.082),
+          flexLongitudinalAmplitude: randomBetween(random, 0.006, 0.032),
+          tipPulseFrequency: randomBetween(random, 0.82, 1.75),
+          tipPulsePhase: randomBetween(random, 0, Math.PI * 2),
           color: cyan
             ? [0.022, randomBetween(random, 0.045, 0.065), randomBetween(random, 0.075, 0.105)]
             : [randomBetween(random, 0.032, 0.052), 0.028, randomBetween(random, 0.075, 0.11)],
@@ -548,6 +613,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
       tint: RGB,
       alpha: number,
       shadowPass: boolean,
+      elapsedSeconds: number,
     ) => {
       gl.useProgram(cableProgram.program);
       bindRibbonAttributes(gl, cableProgram, geometry);
@@ -565,6 +631,14 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
       );
       gl.uniform1f(cableProgram.uniforms.alpha, alpha);
       gl.uniform1f(cableProgram.uniforms.shadowPass, shadowPass ? 1 : 0);
+      gl.uniform1f(cableProgram.uniforms.time, elapsedSeconds);
+      gl.uniform1f(cableProgram.uniforms.flexAmplitude, cable.flexAmplitude);
+      gl.uniform1f(cableProgram.uniforms.flexFrequency, cable.flexFrequency);
+      gl.uniform1f(cableProgram.uniforms.flexPhase, cable.flexPhase);
+      gl.uniform1f(
+        cableProgram.uniforms.longitudinalAmplitude,
+        cable.flexLongitudinalAmplitude,
+      );
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, geometry.vertexCount);
     };
 
@@ -586,6 +660,42 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
       gl.uniform1f(pointProgram.uniforms.size, size * pixelRatio);
       gl.blendFunc(gl.SRC_ALPHA, additive ? gl.ONE : gl.ONE_MINUS_SRC_ALPHA);
       gl.drawArrays(gl.POINTS, 0, 1);
+    };
+
+    const shapeTravelProgress = (cable: CableRecord, progress: number) => {
+      const smooth = progress * progress * (3 - 2 * progress);
+      const biased = progress + cable.travelBias * progress * (1 - progress);
+      return clamp(mix(biased, smooth, cable.travelSmoothness));
+    };
+
+    const calculateFlexOffset = (
+      cable: CableRecord,
+      elapsedSeconds: number,
+      curveProgress: number,
+    ): Vec2 => {
+      const envelope = 0.24 + 0.76 * Math.sin(curveProgress * Math.PI) ** 2;
+      const primary = Math.sin(
+        curveProgress * 5.4 +
+          elapsedSeconds * cable.flexFrequency +
+          cable.flexPhase,
+      );
+      const secondary = Math.sin(
+        curveProgress * 9.2 -
+          elapsedSeconds * cable.flexFrequency * 0.61 +
+          cable.flexPhase * 1.73,
+      );
+      return [
+        Math.sin(
+          curveProgress * 3.7 +
+            elapsedSeconds * cable.flexFrequency * 0.34 +
+            cable.flexPhase * 0.83,
+        ) *
+          cable.flexLongitudinalAmplitude *
+          envelope,
+        (primary * 0.68 + secondary * 0.32) *
+          cable.flexAmplitude *
+          envelope,
+      ];
     };
 
     const render = (now: number) => {
@@ -614,25 +724,45 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
         if (rawProgress < 0 || rawProgress > 1) continue;
 
         const progress = clamp(rawProgress);
+        const travelProgress = shapeTravelProgress(cable, progress);
         const leftStart = -viewWidth / 2 - scaledLength / 2 - outsideGap;
         const leftEnd = viewWidth / 2 + scaledLength / 2 + outsideGap;
         const rightStart = -leftStart;
         const rightEnd = -leftEnd;
-        const x =
+        const direction = cable.side === 'left' ? 1 : -1;
+        const baseX =
           cable.side === 'left'
-            ? mix(leftStart, leftEnd, progress)
-            : mix(rightStart, rightEnd, progress);
+            ? mix(leftStart, leftEnd, travelProgress)
+            : mix(rightStart, rightEnd, travelProgress);
+        const lateralEnvelope = Math.sin(progress * Math.PI) ** 2;
+        const x =
+          baseX +
+          Math.sin(
+            elapsed * cable.lateralDriftFrequency + cable.lateralDriftPhase,
+          ) *
+            cable.lateralDriftAmplitude *
+            lateralEnvelope *
+            direction;
 
         const fadeIn = clamp(progress / 0.045);
         const fadeOut = clamp((1 - progress) / 0.045);
         const alpha = Math.min(fadeIn, fadeOut);
-        const y =
+        const primaryY =
           Math.sin(elapsed * cable.wobbleFrequency + cable.wobblePhase) *
           cable.wobbleAmplitude;
+        const secondaryY =
+          Math.sin(
+            elapsed * cable.secondaryWobbleFrequency +
+              cable.secondaryWobblePhase,
+          ) * cable.secondaryWobbleAmplitude;
+        const travelArc =
+          Math.sin(progress * Math.PI) * cable.travelArcAmplitude;
+        const y = primaryY + secondaryY + travelArc;
         const translation: Vec2 = [x, y];
+        const tipFlex = calculateFlexOffset(cable, elapsed, 1);
         const tip: Vec2 = [
-          cable.localTip[0] * horizontalScale + x,
-          cable.localTip[1] + y,
+          cable.localTip[0] * horizontalScale + x + tipFlex[0],
+          cable.localTip[1] + y + tipFlex[1],
         ];
 
         visibleCables.push({ cable, translation, alpha, tip });
@@ -650,6 +780,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
           [0, 0, 0],
           item.alpha * depthAlpha * 0.76,
           true,
+          elapsed,
         );
       }
 
@@ -665,6 +796,7 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
           item.cable.tint,
           item.alpha * depthAlpha,
           false,
+          elapsed,
         );
         drawRibbon(
           item.cable,
@@ -675,13 +807,19 @@ export const HeroCableScene: React.FC<HeroCableSceneProps> = ({ className = '' }
           [0.34, 0.42, 0.52],
           item.alpha * depthAlpha,
           false,
+          elapsed,
         );
       }
 
       for (const item of visibleCables) {
         const depthScale = mix(0.88, 1.14, clamp(item.cable.depth));
-        const intensity = item.cable.tipIntensity;
-        const tipScale = item.cable.tipScale;
+        const pulse =
+          0.84 +
+          Math.sin(
+            elapsed * item.cable.tipPulseFrequency + item.cable.tipPulsePhase,
+          ) * 0.16;
+        const intensity = item.cable.tipIntensity * pulse;
+        const tipScale = item.cable.tipScale * (0.96 + pulse * 0.04);
         drawPoint(item.tip, item.cable.tipColor, 42 * depthScale * tipScale, item.alpha * 0.18 * intensity, true);
         drawPoint(item.tip, item.cable.tipColor, 18 * depthScale * tipScale, item.alpha * 0.44 * intensity, true);
         drawPoint(item.tip, [0.9, 0.98, 1], 7.5 * depthScale * tipScale, item.alpha * intensity, false);
