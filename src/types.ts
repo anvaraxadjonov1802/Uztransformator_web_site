@@ -52,3 +52,38 @@ export interface SiteConfig {
     label: Record<Language, string>;
   }>;
 }
+
+export interface ContactSettings {
+  phones: Array<{ label: string; href: string }>;
+  email: string;
+  address: Record<Language, string>;
+  workHours: Record<Language, string>;
+  locationText: Record<Language, string>;
+  coordinates: string;
+  mapUrl: string;
+  mapEmbed: string;
+  socials: {
+    telegram: string;
+    instagram: string;
+    whatsapp: string;
+    facebook: string;
+    linkedin: string;
+  };
+}
+
+export interface AdminAccount {
+  id: string;
+  name: string;
+  username: string;
+  password: string;
+  role: 'Super Admin' | 'Editor';
+  createdAt: string;
+}
+
+export interface SiteContent {
+  products: Product[];
+  certificates: Certificate[];
+  partners: Partner[];
+  contact: ContactSettings;
+  admins: AdminAccount[];
+}

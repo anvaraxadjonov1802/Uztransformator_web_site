@@ -37,3 +37,11 @@ Animatsiyaning asosiy sozlamalari fayl boshidagi konstantalarda:
 ## Global animated background
 
 The complete page uses `GlobalNetworkBackground.tsx`: an adaptive fixed canvas with slowly moving stars, twinkling highlights, subtle constellation links, mouse parallax and a reduced-motion mode. Hero cables render transparently above this background.
+
+## Admin panel
+
+- URL: `/admin`
+- Default login: `admin`
+- Default password: `uztransformator_admin`
+
+The current admin panel stores edited content in the browser's localStorage. It is suitable for UI testing and local/demo use. For shared production management across devices, connect the content store to a protected backend/database and object storage.

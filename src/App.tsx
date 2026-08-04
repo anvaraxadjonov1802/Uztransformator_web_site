@@ -10,8 +10,10 @@ import { PartnersMarquee } from './components/PartnersMarquee';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { GlobalNetworkBackground } from './components/GlobalNetworkBackground';
+import { AdminPage } from './admin/AdminPage';
 
 export default function App() {
+  const isAdminRoute = window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/');
   const [currentLang, setCurrentLang] = useState<Language>('uz');
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [prefilledProduct, setPrefilledProduct] = useState<string>('');
@@ -46,6 +48,8 @@ export default function App() {
       contactElem.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  if (isAdminRoute) return <AdminPage />;
 
   return (
     <div className="relative isolate flex min-h-screen flex-col overflow-x-hidden bg-transparent font-sans text-white selection:bg-[#0F5BFF] selection:text-white">

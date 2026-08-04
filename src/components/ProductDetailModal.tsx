@@ -75,11 +75,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
           {/* Image & Description Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <div className="md:col-span-5 bg-black rounded-xl p-4 border border-[#0F5BFF]/20 flex items-center justify-center min-h-[220px]">
+            <div className="relative md:col-span-5 min-h-[240px] overflow-hidden rounded-xl border border-[#0F5BFF]/20 bg-[#0a1320]">
+              <img src={product.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl" />
+              <div className="pointer-events-none absolute inset-0 bg-[#020308]/12" />
               <img
                 src={product.image}
                 alt={product.name[currentLang]}
-                className="w-full h-auto max-h-[240px] object-contain rounded"
+                className="relative z-10 h-[240px] w-full object-contain p-3"
               />
             </div>
 

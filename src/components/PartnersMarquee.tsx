@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language } from '../types';
-import { partnersData } from '../data/partners';
+import { useSiteContent } from '../admin/contentStore';
 import { translations } from '../data/translations';
 
 interface PartnersMarqueeProps {
@@ -9,7 +9,8 @@ interface PartnersMarqueeProps {
 
 export const PartnersMarquee: React.FC<PartnersMarqueeProps> = ({ currentLang }) => {
   const t = translations[currentLang].partners;
-  const marqueeItems = [...partnersData, ...partnersData, ...partnersData];
+  const { partners } = useSiteContent();
+  const marqueeItems = [...partners, ...partners, ...partners];
 
   return (
     <section

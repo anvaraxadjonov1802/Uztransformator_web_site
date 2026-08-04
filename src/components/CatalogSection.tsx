@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ProductCategory, Language, Product } from '../types';
-import { productsData } from '../data/products';
+import { useSiteContent } from '../admin/contentStore';
 import { translations } from '../data/translations';
 import { CatalogFilter } from './CatalogFilter';
 import { ProductCard } from './ProductCard';
@@ -18,13 +18,14 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
 }) => {
   const [activeCategory, setActiveCategory] = useState<ProductCategory>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const { products } = useSiteContent();
 
   const t = translations[currentLang].catalog;
 
   const filteredProducts =
     activeCategory === 'all'
-      ? productsData
-      : productsData.filter((p) => p.category === activeCategory);
+      ? products
+      : products.filter((p) => p.category === activeCategory);
 
   return (
     <section id="catalog" className="relative py-20 lg:py-32 site-section-surface overflow-hidden">
@@ -60,7 +61,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
               duration: 0.72,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-10 grid grid-cols-1 items-start gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="mt-10 grid auto-rows-fr grid-cols-1 items-stretch gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {filteredProducts.map((product, index) => (
               <ProductCard

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Certificate, Language } from '../types';
-import { certificatesData } from '../data/certificates';
+import { useSiteContent } from '../admin/contentStore';
 import { translations } from '../data/translations';
 import { CertificateModal } from './CertificateModal';
 
@@ -11,6 +11,7 @@ interface CertificatesSectionProps {
 
 export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ currentLang }) => {
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
+  const { certificates } = useSiteContent();
   const t = translations[currentLang].certificates;
 
   const certificateTracePaths = [
@@ -136,7 +137,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ curren
         </div>
 
         <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-          {certificatesData.map((cert, index) => (
+          {certificates.map((cert, index) => (
             <motion.button
               key={cert.id}
               type="button"

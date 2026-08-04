@@ -90,24 +90,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         ease: [0.22, 1, 0.36, 1],
         layout: { duration: 0.78, ease: [0.22, 1, 0.36, 1] },
       }}
-      className="group relative flex cursor-pointer flex-col overflow-hidden rounded-[22px] bg-[linear-gradient(180deg,#071733_0%,#041126_100%)] shadow-[0_14px_32px_rgba(0,0,0,0.42)] transition-transform duration-500 hover:-translate-y-1.5"
+      className="group relative flex h-[560px] cursor-pointer flex-col overflow-hidden rounded-[22px] bg-[linear-gradient(180deg,#071733_0%,#041126_100%)] shadow-[0_14px_32px_rgba(0,0,0,0.42)] transition-transform duration-500 hover:-translate-y-1.5"
       onClick={() => onSelect(product)}
     >
       <NeonBorderMotion variant={product.borderVariant} />
 
-      <div className="relative m-3 overflow-hidden rounded-[15px] bg-[#000000]">
-        <div className="aspect-[16/10] overflow-hidden">
-          <img
-            src={product.image}
-            alt={product.name[currentLang]}
-            loading="lazy"
-            className="h-full w-full object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.035] sm:p-4"
-          />
-        </div>
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#000000]/20 via-transparent to-transparent" />
+      <div className="relative m-3 h-[260px] overflow-hidden rounded-[15px] border border-white/10 bg-[#0a1320]">
+        <img
+          src={product.image}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-50 blur-2xl"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/8 via-transparent to-[#020308]/24" />
+        <img
+          src={product.image}
+          alt={product.name[currentLang]}
+          loading="lazy"
+          className="relative z-10 h-full w-full object-contain object-center p-2 transition-transform duration-500 group-hover:scale-[1.035] sm:p-3"
+        />
       </div>
 
-      <div className="flex flex-col px-5 pb-5 pt-1">
+      <div className="flex flex-1 flex-col px-5 pb-5 pt-1">
         <h3 className="line-clamp-2 min-h-[3.25rem] font-display text-[1.35rem] font-bold leading-[1.15] text-white transition-colors duration-200 group-hover:text-[#dfeeff] sm:text-[1.5rem]">
           {product.name[currentLang]}
         </h3>
@@ -129,7 +133,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
-        <div className="mt-4">
+        <div className="mt-auto pt-4">
           <div className="flex items-center justify-end border-t border-[#173462]/65 pt-3">
             <button
               type="button"
