@@ -32,6 +32,7 @@ import {
   ProductCategory,
   ProductSpec,
 } from '../types';
+import { ProductCard } from '../components/ProductCard';
 import {
   getSiteContent,
   resetSiteContent,
@@ -63,7 +64,7 @@ const emptyProduct = (): Product => ({
   image: '',
   shortDesc: emptyLocalized(),
   fullDesc: emptyLocalized(),
-  specs: [emptySpec()],
+  specs: [emptySpec(), emptySpec(), emptySpec(), emptySpec()],
   borderVariant: 1,
 });
 const emptyCertificate = (): Certificate => ({
@@ -315,6 +316,15 @@ const ProductsManager: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
 
+  useEffect(() => {
+    if (!draft) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [draft]);
+
   const filtered = useMemo(
     () => content.products.filter((product) => product.name.uz.toLowerCase().includes(query.toLowerCase())),
     [content.products, query],
@@ -388,29 +398,41 @@ const ProductsManager: React.FC = () => {
 
       <div className={`${panelClass} p-4 sm:p-5`}>
         <Field label="Mahsulot qidirish" placeholder="Nom bo‘yicha qidirish..." value={query} onChange={(event) => setQuery(event.target.value)} />
-        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-5 grid gap-4 xl:grid-cols-2">
           {filtered.map((product) => (
-            <div key={product.id} className="overflow-hidden rounded-2xl border border-[#173462] bg-[#040c1a]">
-              <div className="relative h-44 overflow-hidden bg-[#0b1422]">
-                <img src={product.image} alt={product.name.uz} className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-xl" />
-                <img src={product.image} alt={product.name.uz} className="relative h-full w-full object-contain p-3" />
+            <div key={product.id} className="grid min-h-[270px] overflow-hidden rounded-2xl border border-[#173462] bg-[#040c1a] sm:grid-cols-[180px_1fr]">
+              <div className="relative min-h-44 overflow-hidden border-b border-[#173462] bg-[#0b1422] sm:min-h-full sm:border-b-0 sm:border-r">
+                <img src={product.image} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-125 object-cover opacity-40 blur-2xl" />
+                <div className="absolute inset-0 bg-[#071124]/35" />
+                <img src={product.image} alt={product.name.uz} className="relative h-full w-full object-contain p-4" />
               </div>
-              <div className="p-4">
+              <div className="flex min-w-0 flex-col p-4">
                 <div className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#00e8ff]">{product.category}</div>
-                <h3 className="mt-2 line-clamp-2 min-h-12 font-bold text-white">{product.name.uz}</h3>
-                <div className="mt-4 flex gap-2">
+                <h3 className="mt-2 line-clamp-2 min-h-12 font-bold leading-6 text-white">{product.name.uz}</h3>
+                <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-[#173462]/75 pt-3">
+                  {product.specs.slice(0, 4).map((spec, index) => {
+                    const value = typeof spec.value === 'string' ? spec.value : spec.value.uz;
+                    return (
+                      <div key={`${spec.label.uz}-${index}`} className="min-w-0">
+                        <div className="line-clamp-1 text-[9px] text-slate-500">{spec.label.uz || `Ko‘rsatkich ${index + 1}`}</div>
+                        <div className="mt-1 line-clamp-2 text-xs font-bold text-slate-200">{value || '—'}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-auto flex gap-2 pt-4">
                   <button type="button" onClick={() => beginEdit(product)} className={`${secondaryButton} flex-1 py-2.5`}><Pencil className="h-4 w-4" /> Tahrirlash</button>
                   <button type="button" onClick={() => remove(product)} className="inline-flex items-center justify-center rounded-xl border border-red-500/30 bg-red-500/10 px-3 text-red-300 transition hover:bg-red-500/20" aria-label="O‘chirish"><Trash2 className="h-4 w-4" /></button>
                 </div>
               </div>
             </div>
           ))}
-          {filtered.length === 0 && <div className="md:col-span-2 xl:col-span-3"><EmptyState text="Mahsulot topilmadi." /></div>}
+          {filtered.length === 0 && <div className="xl:col-span-2"><EmptyState text="Mahsulot topilmadi." /></div>}
         </div>
       </div>
 
       {draft && (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/80 p-3 backdrop-blur-md sm:p-6">
+        <div className="fixed inset-0 z-[1000] overflow-y-auto bg-black/80 p-3 backdrop-blur-md sm:p-6">
           <div className={`${panelClass} mx-auto max-w-6xl overflow-hidden`}>
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[#173462] bg-[#071124]/95 px-5 py-4 backdrop-blur-xl">
               <div>
@@ -419,53 +441,73 @@ const ProductsManager: React.FC = () => {
               </div>
               <button type="button" onClick={close} className="rounded-xl border border-[#24487d] p-2.5 text-slate-300 hover:text-white"><X className="h-5 w-5" /></button>
             </div>
-            <div className="space-y-5 p-5 sm:p-7">
-              <div className="grid gap-4 md:grid-cols-3">
-                <Field label="ID / slug" value={draft.id} placeholder="Avtomatik yaratiladi" onChange={(event) => setDraft({ ...draft, id: event.target.value })} />
-                <label className="block">
-                  <span className={labelClass}>Kategoriya</span>
-                  <select value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value as ProductCategory })} className={inputClass}>
-                    <option value="tmg">TMG</option><option value="ktp">KTP</option><option value="ru">RU</option>
-                  </select>
-                </label>
-                <label className="block">
-                  <span className={labelClass}>Neon border variant</span>
-                  <select value={draft.borderVariant} onChange={(event) => setDraft({ ...draft, borderVariant: Number(event.target.value) as Product['borderVariant'] })} className={inputClass}>
-                    {[1,2,3,4,5,6,7,8,9].map((value) => <option key={value} value={value}>{value}</option>)}
-                  </select>
-                </label>
-              </div>
-              <ImageField label="Mahsulot rasmi" value={draft.image} onChange={(image) => setDraft({ ...draft, image })} />
-              <LanguageFields title="Mahsulot nomi" value={draft.name} onChange={(language, value) => setLocalized('name', language, value)} />
-              <LanguageFields title="Qisqa tavsif" multiline value={draft.shortDesc} onChange={(language, value) => setLocalized('shortDesc', language, value)} />
-              <LanguageFields title="To‘liq tavsif" multiline value={draft.fullDesc} onChange={(language, value) => setLocalized('fullDesc', language, value)} />
+            <div className="grid gap-6 p-5 sm:p-7 xl:grid-cols-[minmax(0,1fr)_430px]">
+              <div className="space-y-5">
+                <div className="grid gap-4 md:grid-cols-3">
+                  <Field label="ID / slug" value={draft.id} placeholder="Avtomatik yaratiladi" onChange={(event) => setDraft({ ...draft, id: event.target.value })} />
+                  <label className="block">
+                    <span className={labelClass}>Kategoriya</span>
+                    <select value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value as ProductCategory })} className={inputClass}>
+                      <option value="tmg">TMG</option><option value="ktp">KTP</option><option value="ru">RU</option>
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className={labelClass}>Neon border variant</span>
+                    <select value={draft.borderVariant} onChange={(event) => setDraft({ ...draft, borderVariant: Number(event.target.value) as Product['borderVariant'] })} className={inputClass}>
+                      {[1,2,3,4,5,6,7,8,9].map((value) => <option key={value} value={value}>{value}</option>)}
+                    </select>
+                  </label>
+                </div>
 
-              <div className="rounded-2xl border border-[#173462] bg-[#040c1a]/75 p-4">
-                <div className="mb-4 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-sm font-bold text-white">Texnik xususiyatlar</div>
-                    <div className="mt-1 text-xs text-slate-500">Har bir qator uchun label va qiymatni 3 tilda kiriting.</div>
+                <ImageField label="Mahsulot rasmi" value={draft.image} onChange={(image) => setDraft({ ...draft, image })} />
+                <LanguageFields title="Karta sarlavhasi / mahsulot nomi" value={draft.name} onChange={(language, value) => setLocalized('name', language, value)} />
+                <LanguageFields title="Qisqa tavsif — modal va qidiruv uchun" multiline value={draft.shortDesc} onChange={(language, value) => setLocalized('shortDesc', language, value)} />
+                <LanguageFields title="To‘liq tavsif — mahsulot pasporti uchun" multiline value={draft.fullDesc} onChange={(language, value) => setLocalized('fullDesc', language, value)} />
+
+                <div className="rounded-2xl border border-[#173462] bg-[#040c1a]/75 p-4">
+                  <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <div className="text-sm font-bold text-white">Karta texnik ma’lumotlari</div>
+                      <div className="mt-1 text-xs leading-5 text-slate-500">Eski saytdagi karta kabi birinchi 4 ta qator kartada 2×2 ko‘rinishda chiqadi. Qo‘shimcha qatorlar batafsil oynada qoladi.</div>
+                    </div>
+                    <button type="button" onClick={() => setDraft({ ...draft, specs: [...draft.specs, emptySpec()] })} className={secondaryButton}><Plus className="h-4 w-4" /> Qator qo‘shish</button>
                   </div>
-                  <button type="button" onClick={() => setDraft({ ...draft, specs: [...draft.specs, emptySpec()] })} className={secondaryButton}><Plus className="h-4 w-4" /> Qator qo‘shish</button>
-                </div>
-                <div className="space-y-4">
-                  {draft.specs.map((spec, index) => {
-                    const values = typeof spec.value === 'string' ? { uz: spec.value, ru: spec.value, en: spec.value } : spec.value;
-                    return (
-                      <div key={index} className="rounded-2xl border border-[#24487d] bg-[#020711] p-4">
-                        <div className="mb-3 flex items-center justify-between">
-                          <span className="font-mono text-xs text-[#00e8ff]">#{index + 1}</span>
-                          <button type="button" disabled={draft.specs.length === 1} onClick={() => setDraft({ ...draft, specs: draft.specs.filter((_, itemIndex) => itemIndex !== index) })} className="text-red-300 disabled:opacity-30"><Trash2 className="h-4 w-4" /></button>
+                  <div className="space-y-4">
+                    {draft.specs.map((spec, index) => {
+                      const values = typeof spec.value === 'string' ? { uz: spec.value, ru: spec.value, en: spec.value } : spec.value;
+                      return (
+                        <div key={index} className={`rounded-2xl border p-4 ${index < 4 ? 'border-[#00e8ff]/25 bg-[#03101f]' : 'border-[#24487d] bg-[#020711]'}`}>
+                          <div className="mb-3 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-xs text-[#00e8ff]">#{index + 1}</span>
+                              {index < 4 && <span className="rounded-full border border-[#00e8ff]/20 bg-[#00e8ff]/8 px-2 py-1 text-[9px] uppercase tracking-[0.1em] text-[#7ef4ff]">Kartada ko‘rinadi</span>}
+                            </div>
+                            <button type="button" disabled={draft.specs.length === 1} onClick={() => setDraft({ ...draft, specs: draft.specs.filter((_, itemIndex) => itemIndex !== index) })} className="text-red-300 disabled:opacity-30"><Trash2 className="h-4 w-4" /></button>
+                          </div>
+                          <div className="grid gap-3 lg:grid-cols-2">
+                            <div className="grid gap-3 sm:grid-cols-3">{languages.map((language) => <Field key={language} label={`Nomi — ${language.toUpperCase()}`} placeholder="Masalan: AVR" value={spec.label[language]} onChange={(event) => updateSpec(index, 'label', language, event.target.value)} />)}</div>
+                            <div className="grid gap-3 sm:grid-cols-3">{languages.map((language) => <Field key={language} label={`Qiymati — ${language.toUpperCase()}`} placeholder="Masalan: Bor" value={values[language]} onChange={(event) => updateSpec(index, 'value', language, event.target.value)} />)}</div>
+                          </div>
                         </div>
-                        <div className="grid gap-3 lg:grid-cols-2">
-                          <div className="grid gap-3 sm:grid-cols-3">{languages.map((language) => <Field key={language} label={`Label — ${language.toUpperCase()}`} value={spec.label[language]} onChange={(event) => updateSpec(index, 'label', language, event.target.value)} />)}</div>
-                          <div className="grid gap-3 sm:grid-cols-3">{languages.map((language) => <Field key={language} label={`Qiymat — ${language.toUpperCase()}`} value={values[language]} onChange={(event) => updateSpec(index, 'value', language, event.target.value)} />)}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
+
+              <aside className="xl:sticky xl:top-24 xl:self-start">
+                <div className="mb-3 flex items-center justify-between">
+                  <div>
+                    <div className="font-mono text-[10px] uppercase tracking-[0.17em] text-[#00e8ff]">Jonli preview</div>
+                    <div className="mt-1 text-xs text-slate-500">Saytda karta shunday ko‘rinadi</div>
+                  </div>
+                </div>
+                <div className="h-[225px] overflow-hidden rounded-3xl border border-[#173462] bg-[#020711]">
+                  <div className="w-[900px] origin-top-left scale-[0.475]">
+                    <ProductCard product={draft} currentLang="uz" onSelect={() => undefined} />
+                  </div>
+                </div>
+              </aside>
             </div>
             <div className="sticky bottom-0 flex justify-end gap-3 border-t border-[#173462] bg-[#071124]/95 px-5 py-4 backdrop-blur-xl">
               <button type="button" onClick={close} className={secondaryButton}>Bekor qilish</button>
@@ -508,7 +550,7 @@ const CertificatesManager: React.FC = () => {
         ))}
       </div>
       {draft && (
-        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/80 p-3 backdrop-blur-md sm:p-6"><div className={`${panelClass} mx-auto max-w-5xl`}>
+        <div className="fixed inset-0 z-[1000] overflow-y-auto bg-black/80 p-3 backdrop-blur-md sm:p-6"><div className={`${panelClass} mx-auto max-w-5xl`}>
           <div className="flex items-center justify-between border-b border-[#173462] p-5"><h2 className="font-display text-xl font-bold uppercase text-white">{editingId ? 'Sertifikatni tahrirlash' : 'Yangi sertifikat'}</h2><button onClick={close}><X className="h-5 w-5" /></button></div>
           <div className="space-y-5 p-5 sm:p-7"><div className="grid gap-4 md:grid-cols-2"><Field label="ID" value={draft.id} onChange={(event) => setDraft({ ...draft, id: event.target.value })} /><Field label="Yil" value={draft.year} onChange={(event) => setDraft({ ...draft, year: event.target.value })} /></div><ImageField label="Sertifikat rasmi" value={draft.image} onChange={(image) => setDraft({ ...draft, image })} /><LanguageFields title="Sertifikat nomi" value={draft.title} onChange={(language, value) => localized('title', language, value)} /><LanguageFields title="Sertifikat bergan tashkilot" value={draft.issuer} onChange={(language, value) => localized('issuer', language, value)} /><LanguageFields title="Tavsif" multiline value={draft.description} onChange={(language, value) => localized('description', language, value)} /></div>
           <div className="flex justify-end gap-3 border-t border-[#173462] p-5"><button onClick={close} className={secondaryButton}>Bekor qilish</button><button onClick={save} className={primaryButton}><Save className="h-4 w-4" /> Saqlash</button></div>
@@ -537,7 +579,7 @@ const PartnersManager: React.FC = () => {
     <div>
       <SectionHeading eyebrow="Tashkilotlar" title="Hamkorlar" description="Hamkor tashkilotlar logotipi, nomi va rasmiy havolasini boshqaring." action={<button onClick={() => { setEditingId(null); setDraft(emptyPartner()); }} className={primaryButton}><Plus className="h-4 w-4" /> Hamkor qo‘shish</button>} />
       <div className={`${panelClass} p-5`}><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{content.partners.map((item) => <div key={item.id} className="rounded-2xl border border-[#173462] bg-[#040c1a] p-4"><div className="flex h-28 items-center justify-center rounded-xl bg-white p-4"><img src={item.logo} alt={item.name} className="max-h-full max-w-full object-contain" /></div><h3 className="mt-4 min-h-12 font-bold text-white">{item.name}</h3><div className="mt-3 flex gap-2"><button onClick={() => { setEditingId(item.id); setDraft(structuredClone(item)); }} className={`${secondaryButton} flex-1 py-2.5`}><Pencil className="h-4 w-4" /> Tahrirlash</button><button onClick={() => remove(item)} className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 text-red-300"><Trash2 className="h-4 w-4" /></button></div></div>)}</div></div>
-      {draft && <div className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-md"><div className={`${panelClass} w-full max-w-3xl`}><div className="flex items-center justify-between border-b border-[#173462] p-5"><h2 className="font-display text-xl font-bold uppercase">{editingId ? 'Hamkorni tahrirlash' : 'Yangi hamkor'}</h2><button onClick={close}><X className="h-5 w-5" /></button></div><div className="space-y-5 p-5 sm:p-7"><div className="grid gap-4 md:grid-cols-2"><Field label="ID" value={draft.id} onChange={(event) => setDraft({ ...draft, id: event.target.value })} /><Field label="Hamkor nomi" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /></div><ImageField label="Logotip" value={draft.logo} onChange={(logo) => setDraft({ ...draft, logo })} /><Field label="Rasmiy sayt URL" value={draft.url} onChange={(event) => setDraft({ ...draft, url: event.target.value })} /></div><div className="flex justify-end gap-3 border-t border-[#173462] p-5"><button onClick={close} className={secondaryButton}>Bekor qilish</button><button onClick={save} className={primaryButton}><Save className="h-4 w-4" /> Saqlash</button></div></div></div>}
+      {draft && <div className="fixed inset-0 z-[1000] flex items-center justify-center overflow-y-auto bg-black/80 p-4 backdrop-blur-md"><div className={`${panelClass} w-full max-w-3xl`}><div className="flex items-center justify-between border-b border-[#173462] p-5"><h2 className="font-display text-xl font-bold uppercase">{editingId ? 'Hamkorni tahrirlash' : 'Yangi hamkor'}</h2><button onClick={close}><X className="h-5 w-5" /></button></div><div className="space-y-5 p-5 sm:p-7"><div className="grid gap-4 md:grid-cols-2"><Field label="ID" value={draft.id} onChange={(event) => setDraft({ ...draft, id: event.target.value })} /><Field label="Hamkor nomi" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /></div><ImageField label="Logotip" value={draft.logo} onChange={(logo) => setDraft({ ...draft, logo })} /><Field label="Rasmiy sayt URL" value={draft.url} onChange={(event) => setDraft({ ...draft, url: event.target.value })} /></div><div className="flex justify-end gap-3 border-t border-[#173462] p-5"><button onClick={close} className={secondaryButton}>Bekor qilish</button><button onClick={save} className={primaryButton}><Save className="h-4 w-4" /> Saqlash</button></div></div></div>}
     </div>
   );
 };
@@ -587,7 +629,7 @@ const AdminsManager: React.FC<{ currentAdminId: string }> = ({ currentAdminId })
     <div>
       <SectionHeading eyebrow="Xavfsizlik" title="Adminlar management" description="Admin panelga kirish huquqiga ega foydalanuvchilarni qo‘shing, tahrirlang yoki olib tashlang." action={<button onClick={() => { setEditingId(null); setDraft(emptyAdmin()); }} className={primaryButton}><Plus className="h-4 w-4" /> Admin qo‘shish</button>} />
       <div className={`${panelClass} overflow-hidden`}><div className="overflow-x-auto"><table className="w-full min-w-[720px] text-left"><thead className="border-b border-[#173462] bg-[#040c1a]"><tr className="text-[11px] uppercase tracking-[0.12em] text-slate-500"><th className="px-5 py-4">Admin</th><th className="px-5 py-4">Login</th><th className="px-5 py-4">Rol</th><th className="px-5 py-4">Yaratilgan</th><th className="px-5 py-4 text-right">Amallar</th></tr></thead><tbody>{content.admins.map((item) => <tr key={item.id} className="border-b border-[#173462]/65 last:border-0"><td className="px-5 py-4 font-semibold text-white">{item.name}{item.id === currentAdminId && <span className="ml-2 rounded-full bg-[#00e8ff]/10 px-2 py-1 text-[9px] uppercase text-[#00e8ff]">Siz</span>}</td><td className="px-5 py-4 font-mono text-slate-300">{item.username}</td><td className="px-5 py-4 text-slate-300">{item.role}</td><td className="px-5 py-4 text-sm text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</td><td className="px-5 py-4"><div className="flex justify-end gap-2"><button onClick={() => { setEditingId(item.id); setDraft({ ...item }); }} className="rounded-lg border border-[#24487d] p-2 text-slate-300 hover:text-white"><Pencil className="h-4 w-4" /></button><button onClick={() => remove(item)} className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-300"><Trash2 className="h-4 w-4" /></button></div></td></tr>)}</tbody></table></div></div>
-      {draft && <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"><div className={`${panelClass} w-full max-w-xl`}><div className="flex items-center justify-between border-b border-[#173462] p-5"><h2 className="font-display text-xl font-bold uppercase">{editingId ? 'Adminni tahrirlash' : 'Yangi admin'}</h2><button onClick={close}><X className="h-5 w-5" /></button></div><div className="space-y-4 p-5 sm:p-7"><Field label="Ism" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /><Field label="Login" value={draft.username} onChange={(event) => setDraft({ ...draft, username: event.target.value })} /><Field label="Parol" value={draft.password} onChange={(event) => setDraft({ ...draft, password: event.target.value })} /><label className="block"><span className={labelClass}>Rol</span><select className={inputClass} value={draft.role} onChange={(event) => setDraft({ ...draft, role: event.target.value as AdminAccount['role'] })}><option>Super Admin</option><option>Editor</option></select></label></div><div className="flex justify-end gap-3 border-t border-[#173462] p-5"><button onClick={close} className={secondaryButton}>Bekor qilish</button><button onClick={save} className={primaryButton}><Save className="h-4 w-4" /> Saqlash</button></div></div></div>}
+      {draft && <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"><div className={`${panelClass} w-full max-w-xl`}><div className="flex items-center justify-between border-b border-[#173462] p-5"><h2 className="font-display text-xl font-bold uppercase">{editingId ? 'Adminni tahrirlash' : 'Yangi admin'}</h2><button onClick={close}><X className="h-5 w-5" /></button></div><div className="space-y-4 p-5 sm:p-7"><Field label="Ism" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} /><Field label="Login" value={draft.username} onChange={(event) => setDraft({ ...draft, username: event.target.value })} /><Field label="Parol" value={draft.password} onChange={(event) => setDraft({ ...draft, password: event.target.value })} /><label className="block"><span className={labelClass}>Rol</span><select className={inputClass} value={draft.role} onChange={(event) => setDraft({ ...draft, role: event.target.value as AdminAccount['role'] })}><option>Super Admin</option><option>Editor</option></select></label></div><div className="flex justify-end gap-3 border-t border-[#173462] p-5"><button onClick={close} className={secondaryButton}>Bekor qilish</button><button onClick={save} className={primaryButton}><Save className="h-4 w-4" /> Saqlash</button></div></div></div>}
     </div>
   );
 };
@@ -650,7 +692,7 @@ export const AdminPage: React.FC = () => {
         </div>
       </aside>
       {sidebarOpen && <button className="fixed inset-0 z-40 bg-black/70 lg:hidden" onClick={() => setSidebarOpen(false)} aria-label="Menyuni yopish" />}
-      <div className="relative z-10 lg:pl-[278px]">
+      <div className="relative lg:pl-[278px]">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#173462] bg-[#020711]/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
           <button onClick={() => setSidebarOpen(true)} className="rounded-xl border border-[#24487d] p-2.5 lg:hidden"><Menu className="h-5 w-5" /></button>
           <div className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 sm:block">Kontent boshqaruv tizimi</div>

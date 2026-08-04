@@ -61,7 +61,7 @@ export const CatalogSection: React.FC<CatalogSectionProps> = ({
               duration: 0.72,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="mt-10 grid auto-rows-fr grid-cols-1 items-stretch gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
+            className="mt-10 grid grid-cols-1 items-stretch gap-6 lg:gap-7"
           >
             {filteredProducts.map((product, index) => (
               <ProductCard
